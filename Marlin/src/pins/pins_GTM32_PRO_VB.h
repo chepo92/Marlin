@@ -106,10 +106,10 @@
 //
 // Temperature Sensors
 //
-#define TEMP_BED_PIN       PC0   // PORT NUMBERING
-#define TEMP_0_PIN         PC1   // PORT NUMBERING
-#define TEMP_1_PIN         PC2   // PORT NUMBERING
-#define TEMP_2_PIN		   PC3   // PORT NUMBERING
+#define TEMP_0_PIN         PC0
+#define TEMP_1_PIN         PC1
+#define TEMP_2_PIN		   PC2
+#define TEMP_BED_PIN       PC3
 
 //
 // Beep
