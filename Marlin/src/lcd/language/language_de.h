@@ -19,6 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+#pragma once
 
 /**
  * German
@@ -27,8 +28,6 @@
  * See also http://marlinfw.org/docs/development/lcd_language.html
  *
  */
-#ifndef LANGUAGE_DE_H
-#define LANGUAGE_DE_H
 
 #define CHARSIZE 2
 
@@ -51,6 +50,7 @@
 #define MSG_AUTO_HOME_X                     _UxGT("Home X")
 #define MSG_AUTO_HOME_Y                     _UxGT("Home Y")
 #define MSG_AUTO_HOME_Z                     _UxGT("Home Z")
+#define MSG_AUTO_Z_ALIGN                    _UxGT("Z-Achsen ausgleichen")
 #define MSG_TMC_Z_CALIBRATION               _UxGT("Kalibriere Z")
 #define MSG_LEVEL_BED_HOMING                _UxGT("Home XYZ")
 #define MSG_LEVEL_BED_WAITING               _UxGT("Klick zum Starten")
@@ -84,6 +84,7 @@
 #define MSG_LEVEL_CORNERS                   _UxGT("Ecken nivellieren")
 #define MSG_NEXT_CORNER                     _UxGT("Nächste Ecke")
 #define MSG_EDITING_STOPPED                 _UxGT("Netzbearb. angeh.")
+#define MSG_MESH_EDIT_Z                     _UxGT("Z-Wert")
 #define MSG_USER_MENU                       _UxGT("Benutzer-Menü")
 #define MSG_UBL_DOING_G29                   _UxGT("G29 ausführen")
 #define MSG_UBL_UNHOMED                     _UxGT("Home XYZ zuerst")
@@ -136,7 +137,7 @@
 #define MSG_UBL_OUTPUT_MAP_CSV              _UxGT("Ausgabe für CSV")
 #define MSG_UBL_OUTPUT_MAP_BACKUP           _UxGT("Externe Sicherung")
 #define MSG_UBL_INFO_UBL                    _UxGT("UBL-Info ausgeben")
-#define MSG_UBL_EDIT_MESH_MENU              _UxGT("Netz bearbeiten")
+#define MSG_EDIT_MESH                       _UxGT("Netz bearbeiten")
 #define MSG_UBL_FILLIN_AMOUNT               _UxGT("Menge an Füllung")
 #define MSG_UBL_MANUAL_FILLIN               _UxGT("Manuelles Füllen")
 #define MSG_UBL_SMART_FILLIN                _UxGT("Cleveres Füllen")
@@ -180,6 +181,7 @@
 #define MSG_MOVE_Y                          _UxGT("Bewege Y")
 #define MSG_MOVE_Z                          _UxGT("Bewege Z")
 #define MSG_MOVE_E                          _UxGT("Bewege Extruder")
+#define MSG_HOTEND_TOO_COLD                 _UxGT("Hotend zu kalt")
 #define MSG_MOVE_01MM                       _UxGT(" 0,1 mm")
 #define MSG_MOVE_1MM                        _UxGT(" 1,0 mm")
 #define MSG_MOVE_10MM                       _UxGT("10,0 mm")
@@ -425,5 +427,3 @@
   #define MSG_FILAMENT_CHANGE_PURGE_1         _UxGT("Entleeren...")
   #define MSG_FILAMENT_CHANGE_RESUME_1        _UxGT("Fortsetzen...")
 #endif // LCD_HEIGHT < 4
-
-#endif // LANGUAGE_DE_H

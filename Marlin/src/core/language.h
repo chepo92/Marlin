@@ -19,9 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
-#ifndef LANGUAGE_H
-#define LANGUAGE_H
+#pragma once
 
 #include "../inc/MarlinConfig.h"
 
@@ -264,7 +262,7 @@
 
 // LCD Menu Messages
 
-#define LANGUAGE_DATA_INCL_(M) STRINGIFY_(../lcd/dogm/language_data_##M.h)
+#define LANGUAGE_DATA_INCL_(M) STRINGIFY_(fontdata/langdata_##M.h)
 #define LANGUAGE_DATA_INCL(M) LANGUAGE_DATA_INCL_(M)
 #define INCLUDE_LANGUAGE_DATA LANGUAGE_DATA_INCL(LCD_LANGUAGE)
 
@@ -296,12 +294,12 @@
 #define MSG_H4 "4"
 #define MSG_H5 "5"
 #define MSG_H6 "6"
-#define MSG_N1 " 1"
-#define MSG_N2 " 2"
-#define MSG_N3 " 3"
-#define MSG_N4 " 4"
-#define MSG_N5 " 5"
-#define MSG_N6 " 6"
+#define MSG_LCD_N0 " 1"
+#define MSG_LCD_N1 " 2"
+#define MSG_LCD_N2 " 3"
+#define MSG_LCD_N3 " 4"
+#define MSG_LCD_N4 " 5"
+#define MSG_LCD_N5 " 6"
 #define MSG_E0 "E0"
 #define MSG_E1 "E1"
 #define MSG_E2 "E2"
@@ -342,5 +340,3 @@
   #undef MSG_USER_MENU
   #define MSG_USER_MENU CUSTOM_USER_MENU_TITLE
 #endif
-
-#endif // __LANGUAGE_H
