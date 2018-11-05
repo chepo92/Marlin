@@ -900,9 +900,9 @@ void setup() {
     watchdog_init();
   #endif  
     
-//  #if MB(BOARD_GTM32_PRO_VB)
+  #if MB(GTM32_PRO_VB)
     afio_cfg_debug_ports(AFIO_DEBUG_NONE);
-//  #endif
+  #endif
   
 }
 
