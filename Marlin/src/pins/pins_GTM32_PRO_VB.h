@@ -89,9 +89,9 @@
 //
 // Heaters 
 //
-#define HEATER_0_PIN       PB4   // EXTRUDER 1
-#define HEATER_1_PIN       PB5	 // EXTRUDER 2
-#define HEATER_2_PIN       PB0	 // EXTRUDER 3
+#define HEATER_0_PIN       PB4   // EXTRUDER 1: Label EXT2
+#define HEATER_1_PIN       PB5	 // EXTRUDER 2: Label EXT1
+#define HEATER_2_PIN       PB0	 // EXTRUDER 3: Label EXT0
 
 #define HEATER_BED_PIN     PB1	 // BED
 
@@ -106,9 +106,9 @@
 //
 // Temperature Sensors
 //
-#define TEMP_0_PIN         PC0
-#define TEMP_1_PIN         PC1
-#define TEMP_2_PIN		   PC2
+#define TEMP_0_PIN         PC0	// Label EXT2 
+#define TEMP_1_PIN         PC1	// Label EXT1 
+#define TEMP_2_PIN		   PC2	// Label EXT0 
 #define TEMP_BED_PIN       PC3
 
 //
