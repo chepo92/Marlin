@@ -171,3 +171,6 @@ CMakeListsPrivate.txt
 
 #CLion
 cmake-build-*
+Marlin/Marlin.ino.generic_stm32f103v.bin
+Marlin/Configuration.h
+Marlin/Configuration_adv.h
