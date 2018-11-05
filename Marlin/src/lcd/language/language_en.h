@@ -19,6 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+#pragma once
 
 /**
  * English
@@ -27,8 +28,6 @@
  * See also http://marlinfw.org/docs/development/lcd_language.html
  *
  */
-#ifndef LANGUAGE_EN_H
-#define LANGUAGE_EN_H
 
 #define en 1234
 #if LCD_LANGUAGE == en
@@ -90,6 +89,9 @@
 #endif
 #ifndef MSG_AUTO_HOME_Z
   #define MSG_AUTO_HOME_Z                     _UxGT("Home Z")
+#endif
+#ifndef MSG_AUTO_Z_ALIGN
+  #define MSG_AUTO_Z_ALIGN                    _UxGT("Auto Z-Align")
 #endif
 #ifndef MSG_TMC_Z_CALIBRATION
   #define MSG_TMC_Z_CALIBRATION               _UxGT("Calibrate Z")
@@ -189,6 +191,15 @@
 #endif
 #ifndef MSG_EDITING_STOPPED
   #define MSG_EDITING_STOPPED                 _UxGT("Mesh Editing Stopped")
+#endif
+#ifndef MSG_MESH_X
+  #define MSG_MESH_X                          _UxGT("Index X")
+#endif
+#ifndef MSG_MESH_Y
+  #define MSG_MESH_Y                          _UxGT("Index Y")
+#endif
+#ifndef MSG_MESH_EDIT_Z
+  #define MSG_MESH_EDIT_Z                     _UxGT("Z Value")
 #endif
 #ifndef MSG_USER_MENU
   #define MSG_USER_MENU                       _UxGT("Custom Commands")
@@ -346,8 +357,8 @@
 #ifndef MSG_UBL_INFO_UBL
   #define MSG_UBL_INFO_UBL                    _UxGT("Output UBL Info")
 #endif
-#ifndef MSG_UBL_EDIT_MESH_MENU
-  #define MSG_UBL_EDIT_MESH_MENU              _UxGT("Edit Mesh")
+#ifndef MSG_EDIT_MESH
+  #define MSG_EDIT_MESH                       _UxGT("Edit Mesh")
 #endif
 #ifndef MSG_UBL_FILLIN_AMOUNT
   #define MSG_UBL_FILLIN_AMOUNT               _UxGT("Fill-in Amount")
@@ -1146,5 +1157,3 @@
     #define MSG_FILAMENT_CHANGE_RESUME_1        _UxGT("Resuming...")
   #endif
 #endif // LCD_HEIGHT < 4
-
-#endif // LANGUAGE_EN_H
