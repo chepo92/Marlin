@@ -87,28 +87,28 @@
 #define Z_MAX_PIN          PE0
 
 //
-// Heaters 
+// Heaters / Fans
 //
-#define HEATER_0_PIN       PB4   // EXTRUDER 1: Label EXT2
-#define HEATER_1_PIN       PB5	 // EXTRUDER 2: Label EXT1
-#define HEATER_2_PIN       PB0	 // EXTRUDER 3: Label EXT0
+#define HEATER_0_PIN       PB0   // Board Label EXT0
+#define HEATER_1_PIN       PB5	 // Board Label EXT1
+#define HEATER_2_PIN       PB4	 // Board Label EXT2
 
-#define HEATER_BED_PIN     PB1	 // BED
-
+#define HEATER_BED_PIN     PB1 // BED
 
 //
 // Fans
 //
-#define FAN0_PIN           PB7  // ToDo: Add functionality
-#define FAN1_PIN           PB8  // ToDo: Add functionality
-#define FAN2_PIN           PB9  // ToDo: Add functionality
+#define FAN0_PIN           PB7   // TODO: Add functionality
+#define FAN1_PIN           PB8   // TODO: Add functionality
+#define FAN2_PIN           PB9   // TODO: Add functionality
 
 //
 // Temperature Sensors
 //
-#define TEMP_0_PIN         PC0	// Label EXT2 
-#define TEMP_1_PIN         PC1	// Label EXT1 
-#define TEMP_2_PIN		   PC2	// Label EXT0 
+#define TEMP_0_PIN         PC2   // Board Label EXT0
+#define TEMP_1_PIN         PC1	 // Board Label EXT1 
+#define TEMP_2_PIN		     PC0	 // Board Label EXT2
+
 #define TEMP_BED_PIN       PC3
 
 //
