@@ -93,7 +93,7 @@
 #define HEATER_1_PIN       PB5	 // Board Label EXT1
 #define HEATER_2_PIN       PB4	 // Board Label EXT2
 
-#define HEATER_BED_PIN     PB1 // BED
+#define HEATER_BED_PIN     PB1 	 // BED
 
 //
 // Fans
@@ -107,7 +107,7 @@
 //
 #define TEMP_0_PIN         PC2   // Board Label EXT0
 #define TEMP_1_PIN         PC1	 // Board Label EXT1 
-#define TEMP_2_PIN		     PC0	 // Board Label EXT2
+#define TEMP_2_PIN		   PC0	 // Board Label EXT2
 
 #define TEMP_BED_PIN       PC3
 
