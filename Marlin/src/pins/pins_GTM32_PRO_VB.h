@@ -27,9 +27,9 @@
 #define DEFAULT_MACHINE_NAME "STM32F103VET6"
 #define BOARD_NAME "GTM32 Pro VB"
 
-//#define DISABLE_DEBUG
-//#define DISABLE_JTAG
-//#define DISABLE_JTAGSWD
+#define DISABLE_DEBUG
+#define DISABLE_JTAG
+#define DISABLE_JTAGSWD
 
 // Ignore temp readings during development.
 #define BOGUS_TEMPERATURE_FAILSAFE_OVERRIDE
@@ -74,9 +74,15 @@
 //
 // Heaters / Fans
 //
-#define HEATER_0_PIN       PB0
-#define HEATER_BED_PIN     PB1
+#define HEATER_0_PIN       PB0   // Board Label EXT0
+#define HEATER_1_PIN       PB5	 // Board Label EXT1
+#define HEATER_2_PIN       PB4	 // Board Label EXT2
 
+#define HEATER_BED_PIN     PB1   // BED
+
+//
+// Fans
+//
 #define FAN0_PIN           PB7   // TODO: Add functionality
 #define FAN1_PIN           PB8   // TODO: Add functionality
 #define FAN2_PIN           PB9   // TODO: Add functionality
@@ -84,8 +90,11 @@
 //
 // Temperature Sensors
 //
-#define TEMP_0_PIN         PC2   // PORT NUMBERING
-#define TEMP_BED_PIN       PC3   // PORT NUMBERING
+#define TEMP_0_PIN         PC2   // Board Label EXT0
+#define TEMP_1_PIN         PC1	 // Board Label EXT1 
+#define TEMP_2_PIN		     PC0	 // Board Label EXT2
+
+#define TEMP_BED_PIN       PC3
 
 //
 // Misc. Functions
