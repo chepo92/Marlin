@@ -111,6 +111,12 @@ static void createChar_P(const char c, const byte * const ptr) {
   #define LCD_STR_PROGRESS  "\x03\x04\x05"
 #endif
 
+#if HAS_BUZZER && ENABLED(LCD_USE_I2C_BUZZER)
+  void MarlinUI::buzz(const long duration, const uint16_t freq) {
+    lcd.buzz(duration, freq);
+  }
+#endif
+
 void MarlinUI::set_custom_characters(const HD44780CharSet screen_charset/*=CHARSET_INFO*/) {
   #if NONE(LCD_PROGRESS_BAR, SHOW_BOOTSCREEN)
     UNUSED(screen_charset);
@@ -361,9 +367,11 @@ void MarlinUI::init_lcd() {
 }
 
 bool MarlinUI::detected() {
-  return true
+  return
     #if EITHER(LCD_I2C_TYPE_MCP23017, LCD_I2C_TYPE_MCP23008) && defined(DETECT_DEVICE)
-      && lcd.LcdDetected() == 1
+      lcd.LcdDetected() == 1
+    #else
+      true
     #endif
   ;
 }
@@ -371,17 +379,17 @@ bool MarlinUI::detected() {
 #if HAS_SLOW_BUTTONS
   uint8_t MarlinUI::read_slow_buttons() {
     #if ENABLED(LCD_I2C_TYPE_MCP23017)
-      // Reading these buttons is too slow for interrupt context
-      // so they are read during LCD update in the main loop.
+      // Reading these buttons this is likely to be too slow to call inside interrupt context
+      // so they are called during normal lcd_update
       uint8_t slow_bits = lcd.readButtons()
-        #if !BUTTON_EXISTS(ENC)
-          << B_I2C_BTN_OFFSET
-        #endif
+      #if !BUTTON_EXISTS(ENC)
+        << B_I2C_BTN_OFFSET
+      #endif
       ;
       #if ENABLED(LCD_I2C_VIKI)
         if ((slow_bits & (B_MI | B_RI)) && PENDING(millis(), next_button_update_ms)) // LCD clicked
           slow_bits &= ~(B_MI | B_RI); // Disable LCD clicked buttons if screen is updated
-      #endif
+      #endif // LCD_I2C_VIKI
       return slow_bits;
     #endif // LCD_I2C_TYPE_MCP23017
   }
@@ -1056,42 +1064,42 @@ void MarlinUI::draw_status_screen() {
   #endif // SDSUPPORT
 
   #if ENABLED(LCD_HAS_STATUS_INDICATORS)
-  
-		void MarlinUI::update_indicators() {
-		  // Set the LEDS - referred to as backlights by the LiquidTWI2 library
-		  static uint8_t ledsprev = 0;
-		  uint8_t leds = 0;
+
+    void MarlinUI::update_indicators() {
+      // Set the LEDS - referred to as backlights by the LiquidTWI2 library
+      static uint8_t ledsprev = 0;
+      uint8_t leds = 0;
 		  #if HAS_HEATED_BED
-			if (thermalManager.degTargetBed() > 0) leds |= LED_A;
-		  #endif
-		  
+      if (thermalManager.degTargetBed() > 0) leds |= LED_A;
+      #endif
+
 		  #if HOTENDS > 0
-			if (thermalManager.degTargetHotend(0) > 0) leds |= LED_B;
+      if (thermalManager.degTargetHotend(0) > 0) leds |= LED_B;
 		  #endif
-		  
-		  #if FAN_COUNT > 0
-			if (0
-			  #if HAS_FAN0
-				|| thermalManager.fan_speed[0]
-			  #endif
-			  #if HAS_FAN1
-				|| thermalManager.fan_speed[1]
-			  #endif
-			  #if HAS_FAN2
-				|| thermalManager.fan_speed[2]
-			  #endif
-			) leds |= LED_C;
-		  #endif // FAN_COUNT > 0
+      
+      #if FAN_COUNT > 0
+        if (0
+          #if HAS_FAN0
+            || thermalManager.fan_speed[0]
+          #endif
+          #if HAS_FAN1
+            || thermalManager.fan_speed[1]
+          #endif
+          #if HAS_FAN2
+            || thermalManager.fan_speed[2]
+          #endif
+        ) leds |= LED_C;
+      #endif // FAN_COUNT > 0
 
-		  #if HOTENDS > 1
-			if (thermalManager.degTargetHotend(1) > 0) leds |= LED_C;
-		  #endif
+      #if HOTENDS > 1
+        if (thermalManager.degTargetHotend(1) > 0) leds |= LED_C;
+      #endif
 
-		  if (leds != ledsprev) {
-			lcd.setBacklight(leds);
-			ledsprev = leds;
-		  }
-		}
+      if (leds != ledsprev) {
+        lcd.setBacklight(leds);
+        ledsprev = leds;
+      }
+    }
 
   #endif // LCD_HAS_STATUS_INDICATORS
 

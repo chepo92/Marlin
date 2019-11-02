@@ -65,7 +65,7 @@
   #include "feature/host_actions.h"
 #endif
 
-#if USE_BEEPER
+#if HAS_BUZZER && PIN_EXISTS(BEEPER)
   #include "libs/buzzer.h"
 #endif
 
@@ -687,7 +687,7 @@ void idle(
     print_job_timer.tick();
   #endif
 
-  #if USE_BEEPER
+  #if HAS_BUZZER && PIN_EXISTS(BEEPER)
     buzzer.tick();
   #endif
 
