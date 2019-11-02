@@ -60,11 +60,11 @@
 
 #elif EITHER(LCD_I2C_TYPE_MCP23017, LCD_I2C_TYPE_MCP23008)
 
-  LCD_CLASS lcd(LCD_I2C_ADDRESS
-    #ifdef DETECT_DEVICE
-      , 1
-    #endif
-  );
+  // LCD_CLASS lcd(LCD_I2C_ADDRESS
+    // #ifdef DETECT_DEVICE
+      // , 1
+    // #endif
+  // );
 
 #elif ENABLED(LCD_I2C_TYPE_PCA8574)
 
@@ -1070,11 +1070,11 @@ void MarlinUI::draw_status_screen() {
       static uint8_t ledsprev = 0;
       uint8_t leds = 0;
 		  #if HAS_HEATED_BED
-      if (thermalManager.degTargetBed() > 0) leds |= LED_A;
-      #endif
+			if (thermalManager.degTargetBed() > 0) leds |= LED_A;
+		  #endif
 
 		  #if HOTENDS > 0
-      if (thermalManager.degTargetHotend(0) > 0) leds |= LED_B;
+			if (thermalManager.degTargetHotend(0) > 0) leds |= LED_B;
 		  #endif
       
       #if FAN_COUNT > 0

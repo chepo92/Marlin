@@ -272,6 +272,13 @@
   #define IS_ULTIPANEL
   #include <Wire.h>
   #include <LiquidTWI2.h>
+  #define LCD_CLASS LiquidTWI2
+  LCD_CLASS lcd(LCD_I2C_ADDRESS
+    #ifdef DETECT_DEVICE
+      , 1
+    #endif
+  );
+  
   #define ENCODER_FEEDRATE_DEADZONE 4
 
   #define STD_ENCODER_PULSES_PER_STEP 1
