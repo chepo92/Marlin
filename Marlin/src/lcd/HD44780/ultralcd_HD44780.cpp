@@ -1056,43 +1056,42 @@ void MarlinUI::draw_status_screen() {
   #endif // SDSUPPORT
 
   #if ENABLED(LCD_HAS_STATUS_INDICATORS)
+  
+		void MarlinUI::update_indicators() {
+		  // Set the LEDS - referred to as backlights by the LiquidTWI2 library
+		  static uint8_t ledsprev = 0;
+		  uint8_t leds = 0;
+		  #if HAS_HEATED_BED
+			if (thermalManager.degTargetBed() > 0) leds |= LED_A;
+		  #endif
+		  
+		  #if HOTENDS > 0
+			if (thermalManager.degTargetHotend(0) > 0) leds |= LED_B;
+		  #endif
+		  
+		  #if FAN_COUNT > 0
+			if (0
+			  #if HAS_FAN0
+				|| thermalManager.fan_speed[0]
+			  #endif
+			  #if HAS_FAN1
+				|| thermalManager.fan_speed[1]
+			  #endif
+			  #if HAS_FAN2
+				|| thermalManager.fan_speed[2]
+			  #endif
+			) leds |= LED_C;
+		  #endif // FAN_COUNT > 0
 
-    void MarlinUI::update_indicators() {
-      // Set the LEDS - referred to as backlights by the LiquidTWI2 library
-      static uint8_t ledsprev = 0;
-      uint8_t leds = 0;
-	  #if HAS_HEATED_BED
-		if (thermalManager.degTargetBed() > 0) leds |= LED_A;
-	  #else
-      
-      #if HOTENDS > 0
-        if (thermalManager.degTargetHotend(0) > 0) leds |= LED_B;
-      #endif
-      
+		  #if HOTENDS > 1
+			if (thermalManager.degTargetHotend(1) > 0) leds |= LED_C;
+		  #endif
 
-      #if FAN_COUNT > 0
-        if (0
-          #if HAS_FAN0
-            || thermalManager.fan_speed[0]
-          #endif
-          #if HAS_FAN1
-            || thermalManager.fan_speed[1]
-          #endif
-          #if HAS_FAN2
-            || thermalManager.fan_speed[2]
-          #endif
-        ) leds |= LED_C;
-      #endif // FAN_COUNT > 0
-
-      #if HOTENDS > 1
-        if (thermalManager.degTargetHotend(1) > 0) leds |= LED_C;
-      #endif
-
-      if (leds != ledsprev) {
-        lcd.setBacklight(leds);
-        ledsprev = leds;
-      }
-    }
+		  if (leds != ledsprev) {
+			lcd.setBacklight(leds);
+			ledsprev = leds;
+		  }
+		}
 
   #endif // LCD_HAS_STATUS_INDICATORS
 
