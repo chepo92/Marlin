@@ -1061,10 +1061,14 @@ void MarlinUI::draw_status_screen() {
       // Set the LEDS - referred to as backlights by the LiquidTWI2 library
       static uint8_t ledsprev = 0;
       uint8_t leds = 0;
-
-      if (thermalManager.degTargetBed() > 0) leds |= LED_A;
-
-      if (thermalManager.degTargetHotend(0) > 0) leds |= LED_B;
+	  #if HAS_HEATED_BED
+		if (thermalManager.degTargetBed() > 0) leds |= LED_A;
+	  #else
+      
+      #if HOTENDS > 0
+        if (thermalManager.degTargetHotend(0) > 0) leds |= LED_B;
+      #endif
+      
 
       #if FAN_COUNT > 0
         if (0

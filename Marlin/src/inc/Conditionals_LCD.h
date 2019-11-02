@@ -270,8 +270,8 @@
   #define LCD_I2C_ADDRESS 0x20 // I2C Address of the port expander
   #define LCD_USE_I2C_BUZZER   // Enable buzzer on LCD (requires LiquidTWI2 v1.2.3 or later)
   #define IS_ULTIPANEL
-  // #include <Wire.h>
-  // #include <LiquidTWI2.h>
+  #include <Wire.h>
+  #include <LiquidTWI2.h>
   #define ENCODER_FEEDRATE_DEADZONE 4
 
   #define STD_ENCODER_PULSES_PER_STEP 1
