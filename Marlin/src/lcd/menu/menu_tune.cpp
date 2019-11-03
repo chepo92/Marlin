@@ -81,7 +81,7 @@
     }
     if (ui.should_draw()) {
       const float spm = planner.steps_to_mm[axis];
-      MenuEditItemBase::edit_screen(msg, ftostr54sign(spm * babystep.accum));
+      draw_edit_screen(msg, ftostr54sign(spm * babystep.accum));
       #if ENABLED(BABYSTEP_DISPLAY_TOTAL)
         const bool in_view = (true
           #if HAS_GRAPHICAL_LCD
@@ -143,9 +143,9 @@ void menu_tune() {
   // Nozzle [1-4]:
   //
   #if HOTENDS == 1
-    EDIT_ITEM_FAST(int3, MSG_NOZZLE, &thermalManager.temp_hotend[0].target, 0, HEATER_0_MAXTEMP - 15, []{ thermalManager.start_watching_hotend(0); });
-  #elif HOTENDS > 1
-    #define EDIT_NOZZLE(N) EDIT_ITEM_FAST(int3, MSG_NOZZLE_##N, &thermalManager.temp_hotend[N].target, 0, HEATER_##N##_MAXTEMP - 15, []{ thermalManager.start_watching_hotend(N); })
+    MENU_MULTIPLIER_ITEM_EDIT_CALLBACK(int3, MSG_NOZZLE, &thermalManager.temp_hotend[0].target, 0, HEATER_0_MAXTEMP - 15, thermalManager.start_watching_E0);
+  #else // HOTENDS > 1
+    #define EDIT_NOZZLE(N) MENU_MULTIPLIER_ITEM_EDIT_CALLBACK(int3, MSG_NOZZLE MSG_LCD_N##N, &thermalManager.temp_hotend[N].target, 0, HEATER_##N##_MAXTEMP - 15, thermalManager.start_watching_E##N)
     EDIT_NOZZLE(0);
     EDIT_NOZZLE(1);
     #if HOTENDS > 2
@@ -178,22 +178,19 @@ void menu_tune() {
   //
   #if FAN_COUNT > 0
     #if HAS_FAN0
-      editable.uint8 = thermalManager.fan_speed[0];
-      EDIT_ITEM_FAST(percent, MSG_FIRST_FAN_SPEED, &editable.uint8, 0, 255, []{ thermalManager.set_fan_speed(0, editable.uint8); });
+      MENU_MULTIPLIER_ITEM_EDIT_CALLBACK(uint8, MSG_FAN_SPEED FAN_SPEED_1_SUFFIX, &thermalManager.lcd_tmpfan_speed[0], 0, 255, thermalManager.lcd_setFanSpeed0);
       #if ENABLED(EXTRA_FAN_SPEED)
         MENU_MULTIPLIER_ITEM_EDIT(uint8, MSG_EXTRA_FAN_SPEED FAN_SPEED_1_SUFFIX, &thermalManager.new_fan_speed[0], 3, 255);
       #endif
     #endif
-    #if HAS_FAN1
-      editable.uint8 = thermalManager.fan_speed[1];
-      EDIT_ITEM_FAST(percent, MSG_FAN_SPEED_2, &editable.uint8, 0, 255, []{ thermalManager.set_fan_speed(1, editable.uint8); });
+    #if HAS_FAN1 || (ENABLED(SINGLENOZZLE) && EXTRUDERS > 1)
+      MENU_MULTIPLIER_ITEM_EDIT_CALLBACK(uint8, MSG_FAN_SPEED " 2", &thermalManager.lcd_tmpfan_speed[1], 0, 255, thermalManager.lcd_setFanSpeed1);
       #if ENABLED(EXTRA_FAN_SPEED)
         MENU_MULTIPLIER_ITEM_EDIT(uint8, MSG_EXTRA_FAN_SPEED " 2", &thermalManager.new_fan_speed[1], 3, 255);
       #endif
     #endif
-    #if HAS_FAN2
-      editable.uint8 = thermalManager.fan_speed[2];
-      EDIT_ITEM_FAST(percent, MSG_FAN_SPEED_3, &editable.uint8, 0, 255, []{ thermalManager.set_fan_speed(2, editable.uint8); });
+    #if HAS_FAN2 || (ENABLED(SINGLENOZZLE) && EXTRUDERS > 2)
+      MENU_MULTIPLIER_ITEM_EDIT_CALLBACK(uint8, MSG_FAN_SPEED " 3", &thermalManager.lcd_tmpfan_speed[2], 0, 255, thermalManager.lcd_setFanSpeed2);
       #if ENABLED(EXTRA_FAN_SPEED)
         MENU_MULTIPLIER_ITEM_EDIT(uint8, MSG_EXTRA_FAN_SPEED " 3", &thermalManager.new_fan_speed[2], 3, 255);
       #endif
@@ -205,10 +202,10 @@ void menu_tune() {
   // Flow [1-5]:
   //
   #if EXTRUDERS == 1
-    EDIT_ITEM(int3, MSG_FLOW, &planner.flow_percentage[0], 10, 999, []{ planner.refresh_e_factor(0); });
+    MENU_ITEM_EDIT_CALLBACK(int3, MSG_FLOW, &planner.flow_percentage[0], 10, 999, _lcd_refresh_e_factor_0);
   #elif EXTRUDERS
-    EDIT_ITEM(int3, MSG_FLOW, &planner.flow_percentage[active_extruder], 10, 999, []{ planner.refresh_e_factor(active_extruder); });
-    #define EDIT_FLOW(N) EDIT_ITEM(int3, MSG_FLOW_##N, &planner.flow_percentage[N], 10, 999, []{ planner.refresh_e_factor(N); })
+    MENU_ITEM_EDIT_CALLBACK(int3, MSG_FLOW, &planner.flow_percentage[active_extruder], 10, 999, _lcd_refresh_e_factor);
+    #define EDIT_FLOW(N) MENU_ITEM_EDIT_CALLBACK(int3, MSG_FLOW MSG_LCD_N##N, &planner.flow_percentage[N], 10, 999, _lcd_refresh_e_factor_##N)
     EDIT_FLOW(0);
     EDIT_FLOW(1);
     #if EXTRUDERS > 2
@@ -232,8 +229,8 @@ void menu_tune() {
   //
   #if ENABLED(BABYSTEPPING)
     #if ENABLED(BABYSTEP_XY)
-      SUBMENU(MSG_BABYSTEP_X, []{ _lcd_babystep_go(_lcd_babystep_x); });
-      SUBMENU(MSG_BABYSTEP_Y, []{ _lcd_babystep_go(_lcd_babystep_y); });
+      MENU_ITEM(submenu, MSG_BABYSTEP_X, lcd_babystep_x);
+      MENU_ITEM(submenu, MSG_BABYSTEP_Y, lcd_babystep_y);
     #endif
     #if ENABLED(BABYSTEP_ZPROBE_OFFSET)
       MENU_ITEM(submenu, MSG_ZPROBE_ZOFFSET, lcd_babystep_zoffset);

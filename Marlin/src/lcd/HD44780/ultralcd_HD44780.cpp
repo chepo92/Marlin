@@ -376,7 +376,7 @@ bool MarlinUI::detected() {
   ;
 }
 
-#if HAS_SLOW_BUTTONS
+#if HAS_SLOW_BUTTONS  
   uint8_t MarlinUI::read_slow_buttons() {
     #if ENABLED(LCD_I2C_TYPE_MCP23017)
       // Reading these buttons this is likely to be too slow to call inside interrupt context
@@ -513,14 +513,9 @@ void MarlinUI::clear_lcd() { lcd.clear(); }
       //
       // Show only the Marlin logo
       //
-      extern const char NUL_STR[];
-      logo_lines(NUL_STR);
-      CENTER_OR_SCROLL(SHORT_BUILD_VERSION, 1500);
-      CENTER_OR_SCROLL(MARLIN_WEBSITE_URL, 1500);
-      #ifdef STRING_SPLASH_LINE3
-        CENTER_OR_SCROLL(STRING_SPLASH_LINE3, 1500);
-      #endif
-    }
+      logo_lines(PSTR(""));
+      safe_delay(2000);
+    #endif
 
     lcd.clear();
     safe_delay(100);
@@ -1031,8 +1026,8 @@ void MarlinUI::draw_status_screen() {
 
   #endif // ADVANCED_PAUSE_FEATURE
 
-  // Draw a static item with no left-right margin required. Centered by default.
-  void MenuItem_static::draw(const uint8_t row, PGM_P const pstr, const uint8_t style/*=SS_DEFAULT*/, const char * const valstr/*=nullptr*/) {
+  void draw_menu_item_static(const uint8_t row, PGM_P pstr, const bool center/*=true*/, const bool invert/*=false*/, const char *valstr/*=nullptr*/) {
+    UNUSED(invert);
     int8_t n = LCD_WIDTH;
     lcd_moveto(0, row);
     if (center && !valstr) {
@@ -1044,8 +1039,7 @@ void MarlinUI::draw_status_screen() {
     for (; n > 0; --n) lcd_put_wchar(' ');
   }
 
-  // Draw a generic menu item with pre_char (if selected) and post_char
-  void MenuItemBase::_draw(const bool sel, const uint8_t row, PGM_P const pstr, const char pre_char, const char post_char) {
+  void draw_menu_item(const bool sel, const uint8_t row, PGM_P pstr, const char pre_char, const char post_char) {
     uint8_t n = LCD_WIDTH - 2;
     lcd_moveto(0, row);
     lcd_put_wchar(sel ? pre_char : ' ');
@@ -1054,18 +1048,17 @@ void MarlinUI::draw_status_screen() {
     lcd_put_wchar(post_char);
   }
 
-  // Draw an edit menu item with label and value string
-  void MenuEditItemBase::draw(const bool sel, const uint8_t row, PGM_P pstr, const char* const data, const bool pgm) {
-    int8_t n = LCD_WIDTH - 2 - (pgm ? utf8_strlen_P(data) : utf8_strlen(data));
-    lcd_put_wchar(0, row, sel ? LCD_STR_ARROW_RIGHT[0] : ' ');
+  void _draw_menu_item_edit(const bool sel, const uint8_t row, PGM_P pstr, const char* const data, const bool pgm) {
+    uint8_t n = LCD_WIDTH - 2 - (pgm ? utf8_strlen_P(data) : utf8_strlen(data));
+    lcd_moveto(0, row);
+    lcd_put_wchar(sel ? LCD_STR_ARROW_RIGHT[0] : ' ');
     n -= lcd_put_u8str_max_P(pstr, n);
     lcd_put_wchar(':');
-    for (; n > 0; --n) lcd_put_wchar(' ');
+    for (; n; --n) lcd_put_wchar(' ');
     if (pgm) lcd_put_u8str_P(data); else lcd_put_u8str(data);
   }
 
-  // Draw the edit screen for an editable menu item
-  void MenuEditItemBase::edit_screen(PGM_P const pstr, const char* const value/*=nullptr*/) {
+  void draw_edit_screen(PGM_P const pstr, const char* const value/*=nullptr*/) {
     ui.encoder_direction_normal();
 
     lcd_moveto(0, 1);
@@ -1080,8 +1073,7 @@ void MarlinUI::draw_status_screen() {
     }
   }
 
-  // The Select Screen presents a prompt and two "buttons"
-  void MenuItem_confirm::draw_select_screen(PGM_P const yes, PGM_P const no, const bool yesno, PGM_P const pref, const char * const string/*=nullptr*/, PGM_P const suff/*=nullptr*/) {
+  void draw_select_screen(PGM_P const yes, PGM_P const no, const bool yesno, PGM_P const pref, const char * const string, PGM_P const suff) {
     ui.draw_select_screen_prompt(pref, string, suff);
     SETCURSOR(0, LCD_HEIGHT - 1);
     lcd_put_wchar(yesno ? ' ' : '['); lcd_put_u8str_P(no); lcd_put_wchar(yesno ? ' ' : ']');
@@ -1091,15 +1083,18 @@ void MarlinUI::draw_status_screen() {
 
   #if ENABLED(SDSUPPORT)
 
-    void MenuItem_sdbase::draw(const bool sel, const uint8_t row, PGM_P const, CardReader &theCard, const bool isDir) {
-      lcd_put_wchar(0, row, sel ? LCD_STR_ARROW_RIGHT[0] : ' ');
+    void draw_sd_menu_item(const bool sel, const uint8_t row, PGM_P const pstr, CardReader &theCard, const bool isDir) {
+      UNUSED(pstr);
+
+      lcd_moveto(0, row);
+      lcd_put_wchar(sel ? LCD_STR_ARROW_RIGHT[0] : ' ');
       constexpr uint8_t maxlen = LCD_WIDTH - 2;
       uint8_t n = maxlen - lcd_put_u8str_max(ui.scrolled_filename(theCard, maxlen, row, sel), maxlen);
       for (; n; --n) lcd_put_wchar(' ');
       lcd_put_wchar(isDir ? LCD_STR_FOLDER[0] : ' ');
     }
 
-  #endif
+  #endif // SDSUPPORT
 
   #if ENABLED(LCD_HAS_STATUS_INDICATORS)
 

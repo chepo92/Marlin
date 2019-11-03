@@ -151,8 +151,7 @@ void host_action(const char * const pstr, const bool eol) {
       case PROMPT_PAUSE_RESUME:
         msg = PSTR("LCD_PAUSE_RESUME");
         #if ENABLED(ADVANCED_PAUSE_FEATURE)
-          extern const char M24_STR[];
-          queue.inject_P(M24_STR);
+          queue.inject_P(PSTR("M24"));
         #endif
         break;
       case PROMPT_INFO:

@@ -152,65 +152,29 @@ static void _lcd_move_xyz(PGM_P name, AxisEnum axis) {
         + manual_move_offset
       #endif
     , axis);
-    MenuEditItemBase::edit_screen(name, move_menu_scale >= 0.1f ? ftostr41sign(pos) : ftostr43sign(pos));
+    draw_edit_screen(name, move_menu_scale >= 0.1f ? ftostr41sign(pos) : ftostr43sign(pos));
   }
 }
-void lcd_move_x() { _lcd_move_xyz(GET_TEXT(MSG_MOVE_X), X_AXIS); }
-void lcd_move_y() { _lcd_move_xyz(GET_TEXT(MSG_MOVE_Y), Y_AXIS); }
-void lcd_move_z() { _lcd_move_xyz(GET_TEXT(MSG_MOVE_Z), Z_AXIS); }
-
-#if E_MANUAL
-
-  static void lcd_move_e(
-    #if E_MANUAL > 1
-      const int8_t eindex=-1
-    #endif
-  ) {
-    if (ui.use_click()) return ui.goto_previous_screen_no_defer();
-    if (ui.encoderPosition) {
-      if (!ui.processing_manual_move) {
-        const float diff = float(int32_t(ui.encoderPosition)) * move_menu_scale;
-        #if IS_KINEMATIC
-          manual_move_offset += diff;
-        #else
-          current_position.e += diff;
-        #endif
-        manual_move_to_current(E_AXIS
-          #if E_MANUAL > 1
-            , eindex
-          #endif
-        );
-        ui.refresh(LCDVIEW_REDRAW_NOW);
-      }
-      ui.encoderPosition = 0;
-    }
-    if (ui.should_draw()) {
-      PGM_P pos_label = GET_TEXT(MSG_MOVE_E);
-      #if E_MANUAL > 1
-        switch (eindex) {
-          default: pos_label = GET_TEXT(MSG_MOVE_E0); break;
-          case 1: pos_label = GET_TEXT(MSG_MOVE_E1); break;
-          #if E_MANUAL > 2
-            case 2: pos_label = GET_TEXT(MSG_MOVE_E2); break;
-            #if E_MANUAL > 3
-              case 3: pos_label = GET_TEXT(MSG_MOVE_E3); break;
-              #if E_MANUAL > 4
-                case 4: pos_label = GET_TEXT(MSG_MOVE_E4); break;
-                #if E_MANUAL > 5
-                  case 5: pos_label = GET_TEXT(MSG_MOVE_E5); break;
-                #endif // E_MANUAL > 5
-              #endif // E_MANUAL > 4
-            #endif // E_MANUAL > 3
-          #endif // E_MANUAL > 2
-        }
-      #endif // E_MANUAL > 1
-
-      MenuEditItemBase::edit_screen(pos_label, ftostr41sign(current_position.e
-        #if IS_KINEMATIC
-          + manual_move_offset
-        #endif
-        #if ENABLED(MANUAL_E_MOVES_RELATIVE)
-          - manual_move_e_origin
+void lcd_move_x() { _lcd_move_xyz(PSTR(MSG_MOVE_X), X_AXIS); }
+void lcd_move_y() { _lcd_move_xyz(PSTR(MSG_MOVE_Y), Y_AXIS); }
+void lcd_move_z() { _lcd_move_xyz(PSTR(MSG_MOVE_Z), Z_AXIS); }
+static void _lcd_move_e(
+  #if E_MANUAL > 1
+    const int8_t eindex=-1
+  #endif
+) {
+  if (ui.use_click()) return ui.goto_previous_screen_no_defer();
+  if (ui.encoderPosition) {
+    if (!ui.processing_manual_move) {
+      const float diff = float(int16_t(ui.encoderPosition)) * move_menu_scale;
+      #if IS_KINEMATIC
+        manual_move_offset += diff;
+      #else
+        current_position[E_AXIS] += diff;
+      #endif
+      manual_move_to_current(E_AXIS
+        #if E_MANUAL > 1
+          , eindex
         #endif
       );
       ui.refresh(LCDVIEW_REDRAW_NOW);
@@ -310,14 +274,13 @@ void _menu_move_distance(const AxisEnum axis, const screenFunc_t func, const int
     else
   #endif
   {
-    BACK_ITEM(MSG_MOVE_AXIS);
-    SUBMENU(MSG_MOVE_10MM, []{ _goto_manual_move(10);    });
-    SUBMENU(MSG_MOVE_1MM,  []{ _goto_manual_move( 1);    });
-    SUBMENU(MSG_MOVE_01MM, []{ _goto_manual_move( 0.1f); });
+    MENU_BACK(MSG_MOVE_AXIS);
+    MENU_ITEM(submenu, MSG_MOVE_10MM, menu_move_10mm);
+    MENU_ITEM(submenu, MSG_MOVE_1MM, menu_move_1mm);
+    MENU_ITEM(submenu, MSG_MOVE_01MM, menu_move_01mm);
     if (axis == Z_AXIS && (SHORT_MANUAL_Z_MOVE) > 0.0f && (SHORT_MANUAL_Z_MOVE) < 0.1f) {
-      extern const char NUL_STR[];
-      SUBMENU_P(NUL_STR, []{ _goto_manual_move(float(SHORT_MANUAL_Z_MOVE)); });
-      MENU_ITEM_ADDON_START(0);
+      MENU_ITEM(submenu, "", []{ _goto_manual_move(float(SHORT_MANUAL_Z_MOVE)); });
+      MENU_ITEM_ADDON_START(1);
         char tmp[20], numstr[10];
         // Determine digits needed right of decimal
         const uint8_t digs = !UNEAR_ZERO((SHORT_MANUAL_Z_MOVE) * 1000 - int((SHORT_MANUAL_Z_MOVE) * 1000)) ? 4 :
@@ -380,18 +343,18 @@ void menu_move() {
         true
       #endif
     ) {
-      SUBMENU(MSG_MOVE_X, []{ _menu_move_distance(X_AXIS, lcd_move_x); });
-      SUBMENU(MSG_MOVE_Y, []{ _menu_move_distance(Y_AXIS, lcd_move_y); });
+      MENU_ITEM(submenu, MSG_MOVE_X, lcd_move_get_x_amount);
+      MENU_ITEM(submenu, MSG_MOVE_Y, lcd_move_get_y_amount);
     }
     #if ENABLED(DELTA)
       else
-        ACTION_ITEM(MSG_FREE_XY, []{ line_to_z(delta_clip_start_height); ui.synchronize(); });
+        MENU_ITEM(function, MSG_FREE_XY, lcd_lower_z_to_clip_height);
     #endif
 
-    SUBMENU(MSG_MOVE_Z, []{ _menu_move_distance(Z_AXIS, lcd_move_z); });
+    MENU_ITEM(submenu, MSG_MOVE_Z, lcd_move_get_z_amount);
   }
   else
-    GCODES_ITEM(MSG_AUTO_HOME, G28_STR);
+    MENU_ITEM(gcode, MSG_AUTO_HOME, PSTR("G28"));
 
   #if ANY(SWITCHING_EXTRUDER, SWITCHING_NOZZLE, MAGNETIC_SWITCHING_TOOLHEAD)
 
@@ -434,12 +397,7 @@ void menu_move() {
 
   #endif
 
-  #if E_MANUAL
-
-    // The current extruder
-    SUBMENU(MSG_MOVE_E, []{ _menu_move_distance(E_AXIS, []{ lcd_move_e(); }, -1); });
-
-    #define SUBMENU_MOVE_E(N) SUBMENU(MSG_MOVE_E##N, []{ _menu_move_distance(E_AXIS, []{ lcd_move_e(N); }, N); });
+  #if EITHER(SWITCHING_EXTRUDER, SWITCHING_NOZZLE)
 
     // Only the current...
     MENU_ITEM(submenu, MSG_MOVE_E, lcd_move_get_e_amount);
@@ -501,7 +459,7 @@ void menu_motion() {
   //
   // Auto Home
   //
-  GCODES_ITEM(MSG_AUTO_HOME, G28_STR);
+  MENU_ITEM(gcode, MSG_AUTO_HOME, PSTR("G28"));
   #if ENABLED(INDIVIDUAL_AXIS_HOMING_MENU)
     MENU_ITEM(gcode, MSG_AUTO_HOME_X, PSTR("G28 X"));
     MENU_ITEM(gcode, MSG_AUTO_HOME_Y, PSTR("G28 Y"));
@@ -536,8 +494,7 @@ void menu_motion() {
       MENU_ITEM_EDIT_CALLBACK(bool, MSG_BED_LEVELING, &new_level_state, _lcd_toggle_bed_leveling);
     }
     #if ENABLED(ENABLE_LEVELING_FADE_HEIGHT)
-      editable.decimal = planner.z_fade_height;
-      EDIT_ITEM_FAST(float3, MSG_Z_FADE_HEIGHT, &editable.decimal, 0, 100, []{ set_z_fade_height(editable.decimal); });
+      MENU_MULTIPLIER_ITEM_EDIT_CALLBACK(float3, MSG_Z_FADE_HEIGHT, &lcd_z_fade_height, 0, 100, _lcd_set_z_fade_height);
     #endif
 
   #endif

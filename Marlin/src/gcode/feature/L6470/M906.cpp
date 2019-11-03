@@ -104,7 +104,7 @@ void L6470_report_current(L6470 &motor, const uint8_t axis) {
   sprintf_P(temp_buf, PSTR("   Stall Threshold: %2d (%7.2f mA)"), stall_threshold, (stall_threshold + 1) * 31.25);
   SERIAL_ECHO(temp_buf);
   SERIAL_ECHOPGM("   Motor Status: ");
-  const char *stat_str;
+  const char * const stat_str;
   switch (motor_status) {
     default:
     case 0: stat_str = PSTR("stopped"); break;
@@ -118,8 +118,8 @@ void L6470_report_current(L6470 &motor, const uint8_t axis) {
   SERIAL_ECHOPAIR("   ADC_OUT: ", adc_out);
   SERIAL_ECHOPGM("   Vs_compensation: ");
   serialprintPGM((motor.GetParam(L6470_CONFIG) & CONFIG_EN_VSCOMP) ? PSTR("ENABLED ") : PSTR("DISABLED"));
-
-  SERIAL_ECHOLNPAIR("   Compensation coefficient: ", dtostrf(comp_coef * 0.01f, 7, 2, numstr));
+  sprintf_P(temp_buf, PSTR("   Compensation coefficient: ~%4.2f\n"), comp_coef * 0.01f);
+  SERIAL_ECHO(temp_buf);
   SERIAL_ECHOPAIR("...KVAL_HOLD: ", motor.GetParam(L6470_KVAL_HOLD));
   SERIAL_ECHOPAIR("   KVAL_RUN : ", motor.GetParam(L6470_KVAL_RUN));
   SERIAL_ECHOPAIR("   KVAL_ACC: ", motor.GetParam(L6470_KVAL_ACC));

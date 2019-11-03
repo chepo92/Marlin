@@ -44,11 +44,7 @@
 
 #if MACHINE_CAN_STOP
   void menu_abort_confirm() {
-    MenuItem_confirm::select_screen(
-      GET_TEXT(MSG_BUTTON_STOP), GET_TEXT(MSG_BACK),
-      ui.abort_print, ui.goto_previous_screen,
-      GET_TEXT(MSG_STOP_PRINT), (PGM_P)nullptr, PSTR("?")
-    );
+    do_select_screen(PSTR(MSG_BUTTON_STOP), PSTR(MSG_BACK), ui.abort_print, ui.goto_previous_screen, PSTR(MSG_STOP_PRINT), nullptr, PSTR("?"));
   }
 #endif // MACHINE_CAN_STOP
 
@@ -87,7 +83,17 @@ void menu_configuration();
   void menu_mixer();
 #endif
 
-extern const char M21_STR[];
+#if HAS_SERVICE_INTERVALS && ENABLED(PRINTCOUNTER)
+  #if SERVICE_INTERVAL_1 > 0
+    void menu_service1();
+  #endif
+  #if SERVICE_INTERVAL_2 > 0
+    void menu_service2();
+  #endif
+  #if SERVICE_INTERVAL_3 > 0
+    void menu_service3();
+  #endif
+#endif
 
 void menu_main() {
   START_MENU();
@@ -123,7 +129,7 @@ void menu_main() {
           MENU_ITEM(submenu, MSG_CARD_MENU, menu_sdcard);
           MENU_ITEM(gcode,
             #if PIN_EXISTS(SD_DETECT)
-              MSG_CHANGE_MEDIA, M21_STR
+              MSG_CHANGE_SDCARD, PSTR("M21")
             #else
               MSG_RELEASE_SDCARD, PSTR("M22")
             #endif
@@ -134,8 +140,8 @@ void menu_main() {
         #if PIN_EXISTS(SD_DETECT)
           MENU_ITEM(function, MSG_NO_CARD, nullptr);
         #else
-          GCODES_ITEM(MSG_INIT_MEDIA, M21_STR);
-          ACTION_ITEM(MSG_MEDIA_RELEASED, nullptr);
+          MENU_ITEM(gcode, MSG_INIT_SDCARD, PSTR("M21"));
+          MENU_ITEM(function, MSG_SD_RELEASED, nullptr);
         #endif
       }
     #endif // !HAS_ENCODER_WHEEL && SDSUPPORT
@@ -177,7 +183,7 @@ void menu_main() {
       if (thermalManager.targetHotEnoughToExtrude(active_extruder))
         MENU_ITEM(gcode, MSG_FILAMENTCHANGE, PSTR("M600 B0"));
       else
-        SUBMENU(MSG_FILAMENTCHANGE, []{ _menu_temp_filament_op(PAUSE_MODE_CHANGE_FILAMENT, 0); });
+        MENU_ITEM(submenu, MSG_FILAMENTCHANGE, menu_temp_e0_filament_change);
     #else
       MENU_ITEM(submenu, MSG_FILAMENTCHANGE, menu_change_filament);
     #endif
@@ -213,7 +219,7 @@ void menu_main() {
       if (!card_open) {
         MENU_ITEM(gcode,
           #if PIN_EXISTS(SD_DETECT)
-            MSG_CHANGE_MEDIA, M21_STR
+            MSG_CHANGE_SDCARD, PSTR("M21")
           #else
             MSG_RELEASE_SDCARD, PSTR("M22")
           #endif
@@ -225,41 +231,21 @@ void menu_main() {
       #if PIN_EXISTS(SD_DETECT)
         MENU_ITEM(function, MSG_NO_CARD, nullptr);
       #else
-        GCODES_ITEM(MSG_INIT_MEDIA, M21_STR);
-        ACTION_ITEM(MSG_MEDIA_RELEASED, nullptr);
+        MENU_ITEM(gcode, MSG_INIT_SDCARD, PSTR("M21"));
+        MENU_ITEM(function, MSG_SD_RELEASED, nullptr);
       #endif
     }
   #endif // HAS_ENCODER_WHEEL && SDSUPPORT
 
-  #if HAS_SERVICE_INTERVALS
-    static auto _service_reset = [](const int index) {
-      print_job_timer.resetServiceInterval(index);
-      #if HAS_BUZZER
-        ui.completion_feedback();
-      #endif
-      ui.reset_status();
-      ui.return_to_status();
-    };
+  #if HAS_SERVICE_INTERVALS && ENABLED(PRINTCOUNTER)
     #if SERVICE_INTERVAL_1 > 0
-      CONFIRM_ITEM_P(PSTR(SERVICE_NAME_1),
-        MSG_BUTTON_RESET, MSG_BUTTON_CANCEL,
-        []{ _service_reset(1); }, ui.goto_previous_screen,
-        GET_TEXT(MSG_SERVICE_RESET), F(SERVICE_NAME_1), PSTR("?")
-      );
+      MENU_ITEM(submenu, SERVICE_NAME_1, menu_service1);
     #endif
     #if SERVICE_INTERVAL_2 > 0
-      CONFIRM_ITEM_P(PSTR(SERVICE_NAME_2),
-        MSG_BUTTON_RESET, MSG_BUTTON_CANCEL,
-        []{ _service_reset(2); }, ui.goto_previous_screen,
-        GET_TEXT(MSG_SERVICE_RESET), F(SERVICE_NAME_2), PSTR("?")
-      );
+      MENU_ITEM(submenu, SERVICE_NAME_2, menu_service2);
     #endif
     #if SERVICE_INTERVAL_3 > 0
-      CONFIRM_ITEM_P(PSTR(SERVICE_NAME_3),
-        MSG_BUTTON_RESET, MSG_BUTTON_CANCEL,
-        []{ _service_reset(3); }, ui.goto_previous_screen,
-        GET_TEXT(MSG_SERVICE_RESET), F(SERVICE_NAME_3), PSTR("?")
-      );
+      MENU_ITEM(submenu, SERVICE_NAME_3, menu_service3);
     #endif
   #endif
 

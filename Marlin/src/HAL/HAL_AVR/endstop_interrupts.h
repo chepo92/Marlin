@@ -46,16 +46,33 @@ void endstop_ISR(void) { endstops.update(); }
 /**
  * Patch for pins_arduino.h (...\Arduino\hardware\arduino\avr\variants\mega\pins_arduino.h)
  *
- * These macros for the Arduino MEGA do not include the two connected pins on Port J (D14, D15).
+ * These macros for the Arduino MEGA do not include the two connected pins on Port J (D13, D14).
  * So we extend them here because these are the normal pins for Y_MIN and Y_MAX on RAMPS.
  * There are more PCI-enabled processor pins on Port J, but they are not connected to Arduino MEGA.
  */
 #if defined(ARDUINO_AVR_MEGA2560) || defined(ARDUINO_AVR_MEGA)
-  #define digitalPinHasPCICR(p)   (WITHIN(p, 10, 15) || WITHIN(p, 50, 53) || WITHIN(p, 62, 69))
-  #define moreDigitalPinToPCICR(p)    digitalPinToPCICR(WITHIN(p, 14, 15) ? 10 : p)
-  #define moreDigitalPinToPCICRbit(p) (WITHIN(p, 14, 15) ? 1 : digitalPinToPCICRbit(p))
-  #define moreDigitalPinToPCMSK(p)    (WITHIN(p, 14, 15) ? (&PCMSK1) : digitalPinToPCMSK(p))
-  #define moreDigitalPinToPCMSKbit(p) digitalPinToPCMSKbit(WITHIN(p, 14, 15) ? (p)+36 : p)
+  #undef  digitalPinToPCICR
+  #define digitalPinToPCICR(p)    ( WITHIN(p, 10, 15) || \
+                                    WITHIN(p, 50, 53) || \
+                                    WITHIN(p, 62, 69) ? &PCICR : nullptr )
+  #undef  digitalPinToPCICRbit
+  #define digitalPinToPCICRbit(p) ( WITHIN(p, 10, 13) || WITHIN(p, 50, 53) ? 0 : \
+                                    WITHIN(p, 14, 15) ? 1 : \
+                                    WITHIN(p, 62, 69) ? 2 : \
+                                    0 )
+  #undef  digitalPinToPCMSK
+  #define digitalPinToPCMSK(p)    ( WITHIN(p, 10, 13) || WITHIN(p, 50, 53) ? &PCMSK0 : \
+                                    WITHIN(p, 14, 15) ? &PCMSK1 : \
+                                    WITHIN(p, 62, 69) ? &PCMSK2 : \
+                                    nullptr )
+  #undef  digitalPinToPCMSKbit
+  #define digitalPinToPCMSKbit(p) ( WITHIN(p, 10, 13) ? ((p) - 6) : \
+                                    (p) == 14 || (p) == 51 ? 2 : \
+                                    (p) == 15 || (p) == 52 ? 1 : \
+                                    (p) == 50 ? 3 : \
+                                    (p) == 53 ? 0 : \
+                                    WITHIN(p, 62, 69) ? ((p) - 62) : \
+                                    0 )
 #endif
 
 

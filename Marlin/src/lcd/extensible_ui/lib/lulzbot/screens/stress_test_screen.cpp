@@ -121,7 +121,7 @@ void StressTestScreen::onIdle() {
 
   if (!commandsInQueue()) {
       if (!isPositionKnown()) {
-        injectCommands_P(G28_STR);
+        injectCommands_P(PSTR("G28"));
       } else {
         injectCommands_P(PSTR(
           "G0 X100 Y100 Z100 F6000\n"

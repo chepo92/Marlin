@@ -88,9 +88,8 @@
 #define MSG_UBL_TOOLS                       _UxGT("Утилиты UBL")
 #define MSG_UBL_LEVEL_BED                   _UxGT("Калибровка UBL")
 
-  PROGMEM Language_Str MSG_HOTEND_OFFSET_X                 = _UxGT("2-е сопло X");
-  PROGMEM Language_Str MSG_HOTEND_OFFSET_Y                 = _UxGT("2-е сопло Y");
-  PROGMEM Language_Str MSG_HOTEND_OFFSET_Z                 = _UxGT("2-е сопло Z");
+#define MSG_M48_TEST                        _UxGT("Проверка датчика Z")
+#define MSG_M48_DEVIATION                   _UxGT("Отклонение")
 
 // TODO: IDEX Menu
 #define MSG_OFFSETS_MENU                    _UxGT("Размещение сопел")

@@ -41,7 +41,7 @@ static void lcd_cancel_object_confirm() {
     char('0' + (v % 10)),
     '\0'
   };
-  MenuItem_confirm::confirm_screen(
+  do_select_screen_yn(
     []{
       cancelable.cancel_object(editable.int8 - 1);
       #if HAS_BUZZER
