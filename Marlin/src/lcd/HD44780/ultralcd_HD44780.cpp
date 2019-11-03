@@ -60,11 +60,11 @@
 
 #elif EITHER(LCD_I2C_TYPE_MCP23017, LCD_I2C_TYPE_MCP23008)
 
-  LCD_CLASS lcd(LCD_I2C_ADDRESS
-    #ifdef DETECT_DEVICE
-      , 1
-    #endif
-  );
+  // LCD_CLASS lcd(LCD_I2C_ADDRESS
+    // #ifdef DETECT_DEVICE
+      // , 1
+    // #endif
+  // );
 
 #elif ENABLED(LCD_I2C_TYPE_PCA8574)
 
