@@ -34,6 +34,9 @@
 
 // I2C buttons must be read in the main thread
 #define HAS_SLOW_BUTTONS EITHER(LCD_I2C_VIKI, LCD_I2C_PANELOLU2)
+#ifdef HAS_SLOW_BUTTONS
+	extern millis_t next_button_update_ms;
+#endif
 
 #if HAS_SPI_LCD
 
@@ -154,7 +157,8 @@
   #if ENABLED(LCD_I2C_VIKI)
 
     #define B_I2C_BTN_OFFSET 3 // (the first three bit positions reserved for EN_A, EN_B, EN_C)
-
+    #include <Wire.h>
+    #include <LiquidTWI2.h>
     // button and encoder bit positions within 'buttons'
     #define B_LE (BUTTON_LEFT   << B_I2C_BTN_OFFSET)      // The remaining normalized buttons are all read via I2C
     #define B_UP (BUTTON_UP     << B_I2C_BTN_OFFSET)
