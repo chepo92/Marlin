@@ -177,6 +177,12 @@
   #include "libs/L6470/L6470_Marlin.h"
 #endif
 
+const char G28_STR[] PROGMEM = "G28",
+           M21_STR[] PROGMEM = "M21",
+           M23_STR[] PROGMEM = "M23 %s",
+           M24_STR[] PROGMEM = "M24",
+           NUL_STR[] PROGMEM = "";
+
 bool Running = true;
 
 // For M109 and M190, this flag may be cleared (by M108) to exit the wait loop
@@ -518,7 +524,7 @@ void manage_inactivity(const bool ignore_stepper_queue/*=false*/) {
       if (ELAPSED(ms, next_home_key_ms)) {
         next_home_key_ms = ms + HOME_DEBOUNCE_DELAY;
         LCD_MESSAGEPGM(MSG_AUTO_HOME);
-        queue.enqueue_now_P(PSTR("G28"));
+        queue.enqueue_now_P(G28_STR);
       }
     }
   #endif
@@ -730,7 +736,7 @@ void kill(PGM_P const lcd_msg/*=nullptr*/) {
   SERIAL_ERROR_MSG(MSG_ERR_KILLED);
 
   #if HAS_DISPLAY
-    ui.kill_screen(lcd_msg ? lcd_msg : PSTR(MSG_KILLED));
+    ui.kill_screen(lcd_error ?: GET_TEXT(MSG_KILLED), lcd_component ?: PSTR(""));
   #else
     UNUSED(lcd_msg);
   #endif

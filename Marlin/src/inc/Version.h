@@ -29,7 +29,14 @@
  * to override these values.
  */
 
-#if ENABLED(USE_AUTOMATIC_VERSIONING)
+/**
+ * The STRING_DISTRIBUTION_DATE represents when the binary file was built,
+ * here we define this default string as the date where the latest release
+ * version was tagged.
+ */
+#ifndef STRING_DISTRIBUTION_DATE
+  #define STRING_DISTRIBUTION_DATE "2019-11-02"
+#endif
 
   #include "_Version.h"
 

@@ -190,24 +190,94 @@
 #define MSG_INTENSITY_W                     _UxGT("Intensité blanc")
 #define MSG_LED_BRIGHTNESS                  _UxGT("Luminosité")
 
-#define MSG_MOVING                          _UxGT("Déplacement...")
-#define MSG_FREE_XY                         _UxGT("Débloquer XY")
-#define MSG_MOVE_X                          _UxGT("Déplacer X")
-#define MSG_MOVE_Y                          _UxGT("Déplacer Y")
-#define MSG_MOVE_Z                          _UxGT("Déplacer Z")
-#define MSG_MOVE_E                          _UxGT("Extrudeur")
-#define MSG_HOTEND_TOO_COLD                 _UxGT("Buse trop froide")
-#define MSG_MOVE_Z_DIST                     _UxGT("Déplacer %smm")
-#define MSG_MOVE_01MM                       _UxGT("Déplacer 0.1mm")
-#define MSG_MOVE_1MM                        _UxGT("Déplacer 1mm")
-#define MSG_MOVE_10MM                       _UxGT("Déplacer 10mm")
-#define MSG_SPEED                           _UxGT("Vitesse")
-#define MSG_BED_Z                           _UxGT("Lit Z")
-#define MSG_NOZZLE                          _UxGT("Buse")
-#define MSG_BED                             _UxGT("Lit")
-#define MSG_CHAMBER                         _UxGT("Caisson")
-#define MSG_FAN_SPEED                       _UxGT("Vitesse ventil.")
-#define MSG_EXTRA_FAN_SPEED                 _UxGT("Extra V ventil.")
+  PROGMEM Language_Str MSG_LCD_TILTING_MESH                = _UxGT("Touche point");
+  PROGMEM Language_Str MSG_M48_TEST                        = _UxGT("Ecart sonde Z M48");
+  PROGMEM Language_Str MSG_M48_DEVIATION                   = _UxGT("Ecart");
+  PROGMEM Language_Str MSG_M48_POINT                       = _UxGT("Point M48");
+  PROGMEM Language_Str MSG_IDEX_MENU                       = _UxGT("Mode IDEX");
+  PROGMEM Language_Str MSG_IDEX_MODE_AUTOPARK              = _UxGT("Auto-Park");
+  PROGMEM Language_Str MSG_IDEX_MODE_DUPLICATE             = _UxGT("Duplication");
+  PROGMEM Language_Str MSG_IDEX_MODE_MIRRORED_COPY         = _UxGT("Copie miroir");
+  PROGMEM Language_Str MSG_IDEX_MODE_FULL_CTRL             = _UxGT("Contrôle complet");
+  PROGMEM Language_Str MSG_OFFSETS_MENU                    = _UxGT("Offsets Outil");
+  PROGMEM Language_Str MSG_HOTEND_OFFSET_X                 = _UxGT("Buse 2 X");
+  PROGMEM Language_Str MSG_HOTEND_OFFSET_Y                 = _UxGT("Buse 2 Y");
+  PROGMEM Language_Str MSG_HOTEND_OFFSET_Z                 = _UxGT("Buse 2 Z");
+  PROGMEM Language_Str MSG_G26_HEATING_BED                 = _UxGT("G26 Chauffe lit");
+  PROGMEM Language_Str MSG_G26_HEATING_NOZZLE              = _UxGT("G26 Chauffe buse");
+  PROGMEM Language_Str MSG_G26_MANUAL_PRIME                = _UxGT("Amorce manuelle...");
+  PROGMEM Language_Str MSG_G26_FIXED_LENGTH                = _UxGT("Amorce longueur fixe");
+  PROGMEM Language_Str MSG_G26_PRIME_DONE                  = _UxGT("Amorce terminée");
+  PROGMEM Language_Str MSG_G26_CANCELED                    = _UxGT("G26 annulé");
+  PROGMEM Language_Str MSG_G26_LEAVING                     = _UxGT("Sortie G26");
+  PROGMEM Language_Str MSG_UBL_DOING_G29                   = _UxGT("G29 en cours");
+  PROGMEM Language_Str MSG_UBL_TOOLS                       = _UxGT("Outils UBL");
+  PROGMEM Language_Str MSG_UBL_LEVEL_BED                   = _UxGT("Niveau lit unifié");
+  PROGMEM Language_Str MSG_UBL_MANUAL_MESH                 = _UxGT("Maillage manuel");
+  PROGMEM Language_Str MSG_UBL_BC_INSERT                   = _UxGT("Poser câle & mesurer");
+  PROGMEM Language_Str MSG_UBL_BC_INSERT2                  = _UxGT("Mesure");
+  PROGMEM Language_Str MSG_UBL_BC_REMOVE                   = _UxGT("ôter et mesurer lit");
+  PROGMEM Language_Str MSG_UBL_MOVING_TO_NEXT              = _UxGT("Aller au suivant");
+  PROGMEM Language_Str MSG_UBL_ACTIVATE_MESH               = _UxGT("Activer l'UBL");
+  PROGMEM Language_Str MSG_UBL_DEACTIVATE_MESH             = _UxGT("Désactiver l'UBL");
+  PROGMEM Language_Str MSG_UBL_SET_TEMP_BED                = _UxGT("Température lit");
+  PROGMEM Language_Str MSG_UBL_BED_TEMP_CUSTOM             = _UxGT("Température lit");
+  PROGMEM Language_Str MSG_UBL_SET_TEMP_HOTEND             = _UxGT("Température buse");
+  PROGMEM Language_Str MSG_UBL_HOTEND_TEMP_CUSTOM          = _UxGT("Température buse");
+  PROGMEM Language_Str MSG_UBL_MESH_EDIT                   = _UxGT("Editer maille");
+  PROGMEM Language_Str MSG_UBL_EDIT_CUSTOM_MESH            = _UxGT("Editer maille perso");
+  PROGMEM Language_Str MSG_UBL_FINE_TUNE_MESH              = _UxGT("Réglage fin maille");
+  PROGMEM Language_Str MSG_UBL_DONE_EDITING_MESH           = _UxGT("Terminer maille");
+  PROGMEM Language_Str MSG_UBL_BUILD_CUSTOM_MESH           = _UxGT("Créer maille perso");
+  PROGMEM Language_Str MSG_UBL_BUILD_MESH_MENU             = _UxGT("Créer maille");
+  PROGMEM Language_Str MSG_UBL_BUILD_MESH_M1               = _UxGT("Créer maille ") PREHEAT_1_LABEL;
+  PROGMEM Language_Str MSG_UBL_BUILD_MESH_M2               = _UxGT("Créer maille ") PREHEAT_2_LABEL;
+  PROGMEM Language_Str MSG_UBL_BUILD_COLD_MESH             = _UxGT("Créer maille froide");
+  PROGMEM Language_Str MSG_UBL_MESH_HEIGHT_ADJUST          = _UxGT("Ajuster haut. maille");
+  PROGMEM Language_Str MSG_UBL_MESH_HEIGHT_AMOUNT          = _UxGT("Hauteur");
+  PROGMEM Language_Str MSG_UBL_VALIDATE_MESH_MENU          = _UxGT("Valider maille");
+  PROGMEM Language_Str MSG_UBL_VALIDATE_MESH_M1            = _UxGT("Valider maille ") PREHEAT_1_LABEL;
+  PROGMEM Language_Str MSG_UBL_VALIDATE_MESH_M2            = _UxGT("Valider maille ") PREHEAT_2_LABEL;
+  PROGMEM Language_Str MSG_UBL_VALIDATE_CUSTOM_MESH        = _UxGT("Valider maille perso");
+  PROGMEM Language_Str MSG_UBL_CONTINUE_MESH               = _UxGT("Continuer maille");
+  PROGMEM Language_Str MSG_UBL_MESH_LEVELING               = _UxGT("Niveau par maille");
+  PROGMEM Language_Str MSG_UBL_3POINT_MESH_LEVELING        = _UxGT("Niveau à 3 points");
+  PROGMEM Language_Str MSG_UBL_GRID_MESH_LEVELING          = _UxGT("Niveau grille");
+  PROGMEM Language_Str MSG_UBL_MESH_LEVEL                  = _UxGT("Maille de niveau");
+  PROGMEM Language_Str MSG_UBL_SIDE_POINTS                 = _UxGT("Point latéral");
+  PROGMEM Language_Str MSG_UBL_MAP_TYPE                    = _UxGT("Type de carte");
+  PROGMEM Language_Str MSG_UBL_OUTPUT_MAP                  = _UxGT("Voir maille");
+  PROGMEM Language_Str MSG_UBL_OUTPUT_MAP_HOST             = _UxGT("Voir pour hôte");
+  PROGMEM Language_Str MSG_UBL_OUTPUT_MAP_CSV              = _UxGT("Voir pour CSV");
+  PROGMEM Language_Str MSG_UBL_OUTPUT_MAP_BACKUP           = _UxGT("Voir pour sauveg.");
+  PROGMEM Language_Str MSG_UBL_INFO_UBL                    = _UxGT("Voir info UBL");
+  PROGMEM Language_Str MSG_UBL_FILLIN_AMOUNT               = _UxGT("Taux de remplissage");
+  PROGMEM Language_Str MSG_UBL_MANUAL_FILLIN               = _UxGT("Remplissage manuel");
+  PROGMEM Language_Str MSG_UBL_SMART_FILLIN                = _UxGT("Remplissage auto");
+  PROGMEM Language_Str MSG_UBL_FILLIN_MESH                 = _UxGT("Maille remplissage");
+  PROGMEM Language_Str MSG_UBL_INVALIDATE_ALL              = _UxGT("Tout annuler");
+  PROGMEM Language_Str MSG_UBL_INVALIDATE_CLOSEST          = _UxGT("Annuler le plus près");
+  PROGMEM Language_Str MSG_UBL_FINE_TUNE_ALL               = _UxGT("Réglage fin (tous)");
+  PROGMEM Language_Str MSG_UBL_FINE_TUNE_CLOSEST           = _UxGT("Réglage fin (proche)");
+  PROGMEM Language_Str MSG_UBL_STORAGE_MESH_MENU           = _UxGT("Stockage maille");
+  PROGMEM Language_Str MSG_UBL_STORAGE_SLOT                = _UxGT("Slot mémoire");
+  PROGMEM Language_Str MSG_UBL_LOAD_MESH                   = _UxGT("Charger maille");
+  PROGMEM Language_Str MSG_UBL_SAVE_MESH                   = _UxGT("Sauver maille");
+  PROGMEM Language_Str MSG_MESH_LOADED                     = _UxGT("M117 Maille %i chargée");
+  PROGMEM Language_Str MSG_MESH_SAVED                      = _UxGT("M117 Maille %i enreg.");
+  PROGMEM Language_Str MSG_UBL_NO_STORAGE                  = _UxGT("Pas de mémoire");
+  PROGMEM Language_Str MSG_UBL_SAVE_ERROR                  = _UxGT("Err: Enreg. UBL");
+  PROGMEM Language_Str MSG_UBL_RESTORE_ERROR               = _UxGT("Err: Ouvrir UBL");
+  PROGMEM Language_Str MSG_UBL_Z_OFFSET                    = _UxGT("Z-Offset: ");
+  PROGMEM Language_Str MSG_UBL_Z_OFFSET_STOPPED            = _UxGT("Décal. Z arrêté");
+  PROGMEM Language_Str MSG_UBL_STEP_BY_STEP_MENU           = _UxGT("UBL Pas à pas");
+  PROGMEM Language_Str MSG_UBL_1_BUILD_COLD_MESH           = _UxGT("1.Créer maille froide");
+  PROGMEM Language_Str MSG_UBL_2_SMART_FILLIN              = _UxGT("2.Remplissage auto");
+  PROGMEM Language_Str MSG_UBL_3_VALIDATE_MESH_MENU        = _UxGT("3.Valider maille");
+  PROGMEM Language_Str MSG_UBL_4_FINE_TUNE_ALL             = _UxGT("4.Réglage fin (tous)");
+  PROGMEM Language_Str MSG_UBL_5_VALIDATE_MESH_MENU        = _UxGT("5.Valider maille");
+  PROGMEM Language_Str MSG_UBL_6_FINE_TUNE_ALL             = _UxGT("6.Réglage fin (tous)");
+  PROGMEM Language_Str MSG_UBL_7_SAVE_MESH                 = _UxGT("7.Sauver maille");
 
 #define MSG_FLOW                            _UxGT("Flux")
 #define MSG_CONTROL                         _UxGT("Contrôler")

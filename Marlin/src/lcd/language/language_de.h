@@ -175,24 +175,183 @@
 #define MSG_UBL_Z_OFFSET_STOPPED            _UxGT("Z-Versatz angehalten")
 #define MSG_UBL_STEP_BY_STEP_MENU           _UxGT("Schrittweises UBL")
 
-#define MSG_LED_CONTROL                     _UxGT("Licht-Steuerung")
-#define MSG_LEDS                            _UxGT("Licht")
-#define MSG_LED_PRESETS                     _UxGT("Licht-Einstellung")
-#define MSG_SET_LEDS_RED                    _UxGT("Rot")
-#define MSG_SET_LEDS_ORANGE                 _UxGT("Orange")
-#define MSG_SET_LEDS_YELLOW                 _UxGT("Gelb")
-#define MSG_SET_LEDS_GREEN                  _UxGT("Grün")
-#define MSG_SET_LEDS_BLUE                   _UxGT("Blau")
-#define MSG_SET_LEDS_INDIGO                 _UxGT("Indigo")
-#define MSG_SET_LEDS_VIOLET                 _UxGT("Violett")
-#define MSG_SET_LEDS_WHITE                  _UxGT("Weiß")
-#define MSG_SET_LEDS_DEFAULT                _UxGT("Standard")
-#define MSG_CUSTOM_LEDS                     _UxGT("Benutzerdefiniert")
-#define MSG_INTENSITY_R                     _UxGT("Intensität Rot")
-#define MSG_INTENSITY_G                     _UxGT("Intensität Grün")
-#define MSG_INTENSITY_B                     _UxGT("Intensität Blau")
-#define MSG_INTENSITY_W                     _UxGT("Intensität Weiß")
-#define MSG_LED_BRIGHTNESS                  _UxGT("Helligkeit")
+  PROGMEM Language_Str MSG_YES                             = _UxGT("JA");
+  PROGMEM Language_Str MSG_NO                              = _UxGT("NEIN");
+  PROGMEM Language_Str MSG_BACK                            = _UxGT("Zurück");
+  PROGMEM Language_Str MSG_MEDIA_ABORTING                  = _UxGT("Abbruch...");
+  PROGMEM Language_Str MSG_MEDIA_INSERTED                  = _UxGT("Medium erkannt");
+  PROGMEM Language_Str MSG_MEDIA_REMOVED                   = _UxGT("Medium entfernt");
+  PROGMEM Language_Str MSG_MEDIA_RELEASED                  = _UxGT("Medium freigegeben");
+  PROGMEM Language_Str MSG_MEDIA_WAITING                   = _UxGT("Warten auf Medium");
+  PROGMEM Language_Str MSG_MEDIA_READ_ERROR                = _UxGT("Medium Lesefehler");
+  PROGMEM Language_Str MSG_MEDIA_USB_REMOVED               = _UxGT("USB Gerät entfernt");
+  PROGMEM Language_Str MSG_MEDIA_USB_FAILED                = _UxGT("USB Start fehlge.");
+  PROGMEM Language_Str MSG_LCD_ENDSTOPS                    = _UxGT("Endstopp"); // Max length 8 characters
+  PROGMEM Language_Str MSG_LCD_SOFT_ENDSTOPS               = _UxGT("Software-Endstopp");
+  PROGMEM Language_Str MSG_MAIN                            = _UxGT("Hauptmenü");
+  PROGMEM Language_Str MSG_ADVANCED_SETTINGS               = _UxGT("Erw. Einstellungen");
+  PROGMEM Language_Str MSG_CONFIGURATION                   = _UxGT("Konfiguration");
+  PROGMEM Language_Str MSG_AUTOSTART                       = _UxGT("Autostart");
+  PROGMEM Language_Str MSG_DISABLE_STEPPERS                = _UxGT("Motoren deaktivieren"); // M84 :: Max length 19 characters
+  PROGMEM Language_Str MSG_DEBUG_MENU                      = _UxGT("Debug-Menü");
+  PROGMEM Language_Str MSG_PROGRESS_BAR_TEST               = _UxGT("Statusbalken-Test");
+  PROGMEM Language_Str MSG_AUTO_Z_ALIGN                    = _UxGT("Z-Achsen ausgleichen");
+  PROGMEM Language_Str MSG_LEVEL_BED_WAITING               = _UxGT("Klick zum Starten");
+  PROGMEM Language_Str MSG_LEVEL_BED_NEXT_POINT            = _UxGT("Nächste Koordinate");
+  PROGMEM Language_Str MSG_LEVEL_BED_DONE                  = _UxGT("Nivellieren fertig!");
+  PROGMEM Language_Str MSG_Z_FADE_HEIGHT                   = _UxGT("Ausblendhöhe");
+  PROGMEM Language_Str MSG_SET_HOME_OFFSETS                = _UxGT("Setze Homeversatz");
+  PROGMEM Language_Str MSG_HOME_OFFSETS_APPLIED            = _UxGT("Homeversatz aktiv");
+  PROGMEM Language_Str MSG_SET_ORIGIN                      = _UxGT("Setze Nullpunkte"); //"G92 X0 Y0 Z0" commented out in ultralcd.cpp
+  PROGMEM Language_Str MSG_PREHEAT_1                       = PREHEAT_1_LABEL _UxGT(" Vorwärmen");
+  PROGMEM Language_Str MSG_PREHEAT_1_H0                    = PREHEAT_1_LABEL _UxGT(" Vorwärmen") " " LCD_STR_N0;
+  PROGMEM Language_Str MSG_PREHEAT_1_H1                    = PREHEAT_1_LABEL _UxGT(" Vorwärmen") " " LCD_STR_N1;
+  PROGMEM Language_Str MSG_PREHEAT_1_H2                    = PREHEAT_1_LABEL _UxGT(" Vorwärmen") " " LCD_STR_N2;
+  PROGMEM Language_Str MSG_PREHEAT_1_H3                    = PREHEAT_1_LABEL _UxGT(" Vorwärmen") " " LCD_STR_N3;
+  PROGMEM Language_Str MSG_PREHEAT_1_H4                    = PREHEAT_1_LABEL _UxGT(" Vorwärmen") " " LCD_STR_N4;
+  PROGMEM Language_Str MSG_PREHEAT_1_H5                    = PREHEAT_1_LABEL _UxGT(" Vorwärmen") " " LCD_STR_N5;
+  PROGMEM Language_Str MSG_PREHEAT_1_END                   = PREHEAT_1_LABEL _UxGT(" Extr. Vorwärmen");
+  PROGMEM Language_Str MSG_PREHEAT_1_END_E0                = PREHEAT_1_LABEL _UxGT(" Extr. Vorwärm. ") LCD_STR_N0;
+  PROGMEM Language_Str MSG_PREHEAT_1_END_E1                = PREHEAT_1_LABEL _UxGT(" Extr. Vorwärm. ") LCD_STR_N1;
+  PROGMEM Language_Str MSG_PREHEAT_1_END_E2                = PREHEAT_1_LABEL _UxGT(" Extr. Vorwärm. ") LCD_STR_N2;
+  PROGMEM Language_Str MSG_PREHEAT_1_END_E3                = PREHEAT_1_LABEL _UxGT(" Extr. Vorwärm. ") LCD_STR_N3;
+  PROGMEM Language_Str MSG_PREHEAT_1_END_E4                = PREHEAT_1_LABEL _UxGT(" Extr. Vorwärm. ") LCD_STR_N4;
+  PROGMEM Language_Str MSG_PREHEAT_1_END_E5                = PREHEAT_1_LABEL _UxGT(" Extr. Vorwärm. ") LCD_STR_N5;
+  PROGMEM Language_Str MSG_PREHEAT_1_ALL                   = PREHEAT_1_LABEL _UxGT(" Alles Vorwärmen");
+  PROGMEM Language_Str MSG_PREHEAT_1_BEDONLY               = PREHEAT_1_LABEL _UxGT(" Bett Vorwärmen");
+  PROGMEM Language_Str MSG_PREHEAT_1_SETTINGS              = PREHEAT_1_LABEL _UxGT(" Einstellungen");
+  PROGMEM Language_Str MSG_PREHEAT_2                       = PREHEAT_2_LABEL _UxGT(" Vorwärmen");
+  PROGMEM Language_Str MSG_PREHEAT_2_H0                    = PREHEAT_2_LABEL _UxGT(" Vorwärmen") " " LCD_STR_N0;
+  PROGMEM Language_Str MSG_PREHEAT_2_H1                    = PREHEAT_2_LABEL _UxGT(" Vorwärmen") " " LCD_STR_N1;
+  PROGMEM Language_Str MSG_PREHEAT_2_H2                    = PREHEAT_2_LABEL _UxGT(" Vorwärmen") " " LCD_STR_N2;
+  PROGMEM Language_Str MSG_PREHEAT_2_H3                    = PREHEAT_2_LABEL _UxGT(" Vorwärmen") " " LCD_STR_N3;
+  PROGMEM Language_Str MSG_PREHEAT_2_H4                    = PREHEAT_2_LABEL _UxGT(" Vorwärmen") " " LCD_STR_N4;
+  PROGMEM Language_Str MSG_PREHEAT_2_H5                    = PREHEAT_2_LABEL _UxGT(" Vorwärmen") " " LCD_STR_N5;
+  PROGMEM Language_Str MSG_PREHEAT_2_END                   = PREHEAT_2_LABEL _UxGT(" Extr. Vorwärmen");
+  PROGMEM Language_Str MSG_PREHEAT_2_END_E0                = PREHEAT_2_LABEL _UxGT(" Extr. Vorwärm. ") LCD_STR_N0;
+  PROGMEM Language_Str MSG_PREHEAT_2_END_E1                = PREHEAT_2_LABEL _UxGT(" Extr. Vorwärm. ") LCD_STR_N1;
+  PROGMEM Language_Str MSG_PREHEAT_2_END_E2                = PREHEAT_2_LABEL _UxGT(" Extr. Vorwärm. ") LCD_STR_N2;
+  PROGMEM Language_Str MSG_PREHEAT_2_END_E3                = PREHEAT_2_LABEL _UxGT(" Extr. Vorwärm. ") LCD_STR_N3;
+  PROGMEM Language_Str MSG_PREHEAT_2_END_E4                = PREHEAT_2_LABEL _UxGT(" Extr. Vorwärm. ") LCD_STR_N4;
+  PROGMEM Language_Str MSG_PREHEAT_2_END_E5                = PREHEAT_2_LABEL _UxGT(" Extr. Vorwärm. ") LCD_STR_N5;
+  PROGMEM Language_Str MSG_PREHEAT_2_ALL                   = PREHEAT_2_LABEL _UxGT(" Alles Vorwärmen");
+  PROGMEM Language_Str MSG_PREHEAT_2_BEDONLY               = PREHEAT_2_LABEL _UxGT(" Bett Vorwärmen");
+  PROGMEM Language_Str MSG_PREHEAT_2_SETTINGS              = PREHEAT_2_LABEL _UxGT(" Einstellungen");
+  PROGMEM Language_Str MSG_PREHEAT_CUSTOM                  = _UxGT("benutzerdef. Heizen");
+  PROGMEM Language_Str MSG_COOLDOWN                        = _UxGT("Abkühlen");
+  PROGMEM Language_Str MSG_LASER_MENU                      = _UxGT("Laser");
+  PROGMEM Language_Str MSG_LASER_OFF                       = _UxGT("Laser aus");
+  PROGMEM Language_Str MSG_LASER_ON                        = _UxGT("Laser an");
+  PROGMEM Language_Str MSG_LASER_POWER                     = _UxGT("Laserleistung");
+  PROGMEM Language_Str MSG_SPINDLE_MENU                    = _UxGT("Spindel-Steuerung");
+  PROGMEM Language_Str MSG_SPINDLE_OFF                     = _UxGT("Spindel aus");
+  PROGMEM Language_Str MSG_SPINDLE_ON                      = _UxGT("Spindel an");
+  PROGMEM Language_Str MSG_SPINDLE_POWER                   = _UxGT("Spindelleistung");
+  PROGMEM Language_Str MSG_SPINDLE_REVERSE                 = _UxGT("Spindelrichtung");
+  PROGMEM Language_Str MSG_SWITCH_PS_ON                    = _UxGT("Netzteil ein");
+  PROGMEM Language_Str MSG_SWITCH_PS_OFF                   = _UxGT("Netzteil aus");
+  PROGMEM Language_Str MSG_EXTRUDE                         = _UxGT("Extrudieren");
+  PROGMEM Language_Str MSG_RETRACT                         = _UxGT("Einzug");
+  PROGMEM Language_Str MSG_MOVE_AXIS                       = _UxGT("Achsen bewegen");
+  PROGMEM Language_Str MSG_BED_LEVELING                    = _UxGT("Bett-Nivellierung");
+  PROGMEM Language_Str MSG_LEVEL_BED                       = _UxGT("Bett nivellieren");
+  PROGMEM Language_Str MSG_LEVEL_CORNERS                   = _UxGT("Ecken nivellieren");
+  PROGMEM Language_Str MSG_NEXT_CORNER                     = _UxGT("Nächste Ecke");
+  PROGMEM Language_Str MSG_MESH_EDITOR                     = _UxGT("Netz Editor");
+  PROGMEM Language_Str MSG_EDIT_MESH                       = _UxGT("Netz bearbeiten");
+  PROGMEM Language_Str MSG_EDITING_STOPPED                 = _UxGT("Netzbearb. angeh.");
+  PROGMEM Language_Str MSG_PROBING_MESH                    = _UxGT("Messpunkt");
+  PROGMEM Language_Str MSG_MESH_X                          = _UxGT("Index X");
+  PROGMEM Language_Str MSG_MESH_Y                          = _UxGT("Index Y");
+  PROGMEM Language_Str MSG_MESH_EDIT_Z                     = _UxGT("Z-Wert");
+  PROGMEM Language_Str MSG_USER_MENU                       = _UxGT("Benutzer-Menü");
+  PROGMEM Language_Str MSG_LCD_TILTING_MESH                = _UxGT("Berührungspunkt");
+  PROGMEM Language_Str MSG_M48_TEST                        = _UxGT("M48 Sondentest");
+  PROGMEM Language_Str MSG_M48_POINT                       = _UxGT("M48 Punkt");
+  PROGMEM Language_Str MSG_M48_DEVIATION                   = _UxGT("Abweichung");
+  PROGMEM Language_Str MSG_IDEX_MENU                       = _UxGT("IDEX-Modus");
+  PROGMEM Language_Str MSG_OFFSETS_MENU                    = _UxGT("Werkzeugversätze");
+  PROGMEM Language_Str MSG_IDEX_MODE_AUTOPARK              = _UxGT("Autom. parken");
+  PROGMEM Language_Str MSG_IDEX_MODE_DUPLICATE             = _UxGT("Duplizieren");
+  PROGMEM Language_Str MSG_IDEX_MODE_MIRRORED_COPY         = _UxGT("Spiegelkopie");
+  PROGMEM Language_Str MSG_IDEX_MODE_FULL_CTRL             = _UxGT("vollstä. Kontrolle");
+  PROGMEM Language_Str MSG_HOTEND_OFFSET_X                 = _UxGT("2. Düse X");
+  PROGMEM Language_Str MSG_HOTEND_OFFSET_Y                 = _UxGT("2. Düse Y");
+  PROGMEM Language_Str MSG_HOTEND_OFFSET_Z                 = _UxGT("2. Düse Z");
+  PROGMEM Language_Str MSG_UBL_DOING_G29                   = _UxGT("G29 ausführen");
+  PROGMEM Language_Str MSG_UBL_TOOLS                       = _UxGT("UBL-Werkzeuge");
+  PROGMEM Language_Str MSG_UBL_LEVEL_BED                   = _UxGT("Unified Bed Leveling");
+  PROGMEM Language_Str MSG_UBL_MANUAL_MESH                 = _UxGT("Netz manuell erst.");
+  PROGMEM Language_Str MSG_UBL_BC_INSERT                   = _UxGT("Unterlegen & messen");
+  PROGMEM Language_Str MSG_UBL_BC_INSERT2                  = _UxGT("Messen");
+  PROGMEM Language_Str MSG_UBL_BC_REMOVE                   = _UxGT("Entfernen & messen");
+  PROGMEM Language_Str MSG_UBL_MOVING_TO_NEXT              = _UxGT("Nächster Punkt...");
+  PROGMEM Language_Str MSG_UBL_ACTIVATE_MESH               = _UxGT("UBL aktivieren");
+  PROGMEM Language_Str MSG_UBL_DEACTIVATE_MESH             = _UxGT("UBL deaktivieren");
+  PROGMEM Language_Str MSG_UBL_SET_TEMP_BED                = _UxGT("Betttemperatur");
+  PROGMEM Language_Str MSG_UBL_BED_TEMP_CUSTOM             = _UxGT("Betttemperatur");
+  PROGMEM Language_Str MSG_UBL_SET_TEMP_HOTEND             = _UxGT("Hotend-Temp.");
+  PROGMEM Language_Str MSG_UBL_HOTEND_TEMP_CUSTOM          = _UxGT("Hotend-Temp.");
+  PROGMEM Language_Str MSG_UBL_MESH_EDIT                   = _UxGT("Netz bearbeiten");
+  PROGMEM Language_Str MSG_UBL_EDIT_CUSTOM_MESH            = _UxGT("Eigenes Netz bearb.");
+  PROGMEM Language_Str MSG_UBL_FINE_TUNE_MESH              = _UxGT("Feineinstellung...");
+  PROGMEM Language_Str MSG_UBL_DONE_EDITING_MESH           = _UxGT("Bearbeitung beendet");
+  PROGMEM Language_Str MSG_UBL_BUILD_CUSTOM_MESH           = _UxGT("Eigenes Netz erst.");
+  PROGMEM Language_Str MSG_UBL_BUILD_MESH_MENU             = _UxGT("Netz erstellen");
+  PROGMEM Language_Str MSG_UBL_BUILD_MESH_M1               = PREHEAT_1_LABEL _UxGT(" Netz erstellen");
+  PROGMEM Language_Str MSG_UBL_BUILD_MESH_M2               = PREHEAT_2_LABEL _UxGT(" Netz erstellen");
+  PROGMEM Language_Str MSG_UBL_BUILD_COLD_MESH             = _UxGT("Netz erstellen kalt");
+  PROGMEM Language_Str MSG_UBL_MESH_HEIGHT_ADJUST          = _UxGT("Netzhöhe einst.");
+  PROGMEM Language_Str MSG_UBL_MESH_HEIGHT_AMOUNT          = _UxGT("Höhe");
+  PROGMEM Language_Str MSG_UBL_VALIDATE_MESH_MENU          = _UxGT("Netz validieren");
+  PROGMEM Language_Str MSG_UBL_VALIDATE_MESH_M1            = PREHEAT_1_LABEL _UxGT(" Netz validieren");
+  PROGMEM Language_Str MSG_UBL_VALIDATE_MESH_M2            = PREHEAT_2_LABEL _UxGT(" Netz validieren");
+  PROGMEM Language_Str MSG_UBL_VALIDATE_CUSTOM_MESH        = _UxGT("Eig. Netz validieren");
+  PROGMEM Language_Str MSG_G26_HEATING_NOZZLE              = _UxGT("G26 Heating Nozzle");
+  PROGMEM Language_Str MSG_G26_HEATING_BED                 = _UxGT("G26 heizt Bett");
+  PROGMEM Language_Str MSG_G26_FIXED_LENGTH                = _UxGT("Feste Länge Prime");
+  PROGMEM Language_Str MSG_G26_PRIME_DONE                  = _UxGT("Priming fertig");
+  PROGMEM Language_Str MSG_G26_CANCELED                    = _UxGT("G26 abgebrochen");
+  PROGMEM Language_Str MSG_G26_LEAVING                     = _UxGT("G26 verlassen");
+  PROGMEM Language_Str MSG_UBL_CONTINUE_MESH               = _UxGT("Netzerst. forts.");
+  PROGMEM Language_Str MSG_UBL_MESH_LEVELING               = _UxGT("Netz-Nivellierung");
+  PROGMEM Language_Str MSG_UBL_3POINT_MESH_LEVELING        = _UxGT("3-Punkt-Nivell.");
+  PROGMEM Language_Str MSG_UBL_GRID_MESH_LEVELING          = _UxGT("Gitternetz-Nivell.");
+  PROGMEM Language_Str MSG_UBL_MESH_LEVEL                  = _UxGT("Netz nivellieren");
+  PROGMEM Language_Str MSG_UBL_SIDE_POINTS                 = _UxGT("Eckpunkte");
+  PROGMEM Language_Str MSG_UBL_MAP_TYPE                    = _UxGT("Kartentyp");
+  PROGMEM Language_Str MSG_UBL_OUTPUT_MAP                  = _UxGT("Karte ausgeben");
+  PROGMEM Language_Str MSG_UBL_OUTPUT_MAP_HOST             = _UxGT("Ausgabe für Host");
+  PROGMEM Language_Str MSG_UBL_OUTPUT_MAP_CSV              = _UxGT("Ausgabe für CSV");
+  PROGMEM Language_Str MSG_UBL_OUTPUT_MAP_BACKUP           = _UxGT("Externe Sicherung");
+  PROGMEM Language_Str MSG_UBL_INFO_UBL                    = _UxGT("UBL-Info ausgeben");
+  PROGMEM Language_Str MSG_UBL_FILLIN_AMOUNT               = _UxGT("Menge an Füllung");
+  PROGMEM Language_Str MSG_UBL_MANUAL_FILLIN               = _UxGT("Manuelles Füllen");
+  PROGMEM Language_Str MSG_UBL_SMART_FILLIN                = _UxGT("Cleveres Füllen");
+  PROGMEM Language_Str MSG_UBL_FILLIN_MESH                 = _UxGT("Netz Füllen");
+  PROGMEM Language_Str MSG_UBL_INVALIDATE_ALL              = _UxGT("Alles annullieren");
+  PROGMEM Language_Str MSG_UBL_INVALIDATE_CLOSEST          = _UxGT("Nächstlieg. ann.");
+  PROGMEM Language_Str MSG_UBL_FINE_TUNE_ALL               = _UxGT("Feineinst. Alles");
+  PROGMEM Language_Str MSG_UBL_FINE_TUNE_CLOSEST           = _UxGT("Feineinst. Nächstl.");
+  PROGMEM Language_Str MSG_UBL_STORAGE_MESH_MENU           = _UxGT("Netz-Speicherplatz");
+  PROGMEM Language_Str MSG_UBL_STORAGE_SLOT                = _UxGT("Speicherort");
+  PROGMEM Language_Str MSG_UBL_LOAD_MESH                   = _UxGT("Bettnetz laden");
+  PROGMEM Language_Str MSG_UBL_SAVE_MESH                   = _UxGT("Bettnetz speichern");
+  PROGMEM Language_Str MSG_MESH_LOADED                     = _UxGT("M117 Netz %i geladen");
+  PROGMEM Language_Str MSG_MESH_SAVED                      = _UxGT("M117 Netz %i gespeichert");
+  PROGMEM Language_Str MSG_UBL_NO_STORAGE                  = _UxGT("Kein Speicher");
+  PROGMEM Language_Str MSG_UBL_SAVE_ERROR                  = _UxGT("Err:UBL speichern");
+  PROGMEM Language_Str MSG_UBL_RESTORE_ERROR               = _UxGT("Err:UBL wiederherst.");
+  PROGMEM Language_Str MSG_UBL_Z_OFFSET                    = _UxGT("Z-Versatz: ");
+  PROGMEM Language_Str MSG_UBL_Z_OFFSET_STOPPED            = _UxGT("Z-Versatz angehalten");
+  PROGMEM Language_Str MSG_UBL_STEP_BY_STEP_MENU           = _UxGT("Schrittweises UBL");
+  PROGMEM Language_Str MSG_UBL_1_BUILD_COLD_MESH           = _UxGT("1.Netz erstellen kalt");
+  PROGMEM Language_Str MSG_UBL_2_SMART_FILLIN              = _UxGT("2.Cleveres Füllen");
+  PROGMEM Language_Str MSG_UBL_3_VALIDATE_MESH_MENU        = _UxGT("3.Netz validieren");
+  PROGMEM Language_Str MSG_UBL_4_FINE_TUNE_ALL             = _UxGT("4.Feineinst. Alles");
+  PROGMEM Language_Str MSG_UBL_5_VALIDATE_MESH_MENU        = _UxGT("5.Netz validieren");
+  PROGMEM Language_Str MSG_UBL_6_FINE_TUNE_ALL             = _UxGT("6.Feineinst. Alles");
+  PROGMEM Language_Str MSG_UBL_7_SAVE_MESH                 = _UxGT("7.Bettnetz speichern");
 
 #define MSG_MOVING                          _UxGT("In Bewegung...")
 #define MSG_FREE_XY                         _UxGT("Abstand XY")

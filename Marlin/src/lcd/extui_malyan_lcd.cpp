@@ -251,12 +251,8 @@ void process_lcd_p_command(const char* command) {
         thermalManager.zero_fan_speeds();
         wait_for_heatup = false;
         write_to_lcd_P(PSTR("{SYS:STARTED}"));
-      #endif
-      break;
-    case 'H':
-      // Home all axis
-      queue.enqueue_now_P(PSTR("G28"));
-      break;
+        break;
+    case 'H': queue.enqueue_now_P(G28_STR); break; // Home all axes
     default: {
       #if ENABLED(SDSUPPORT)
         // Print file 000 - a three digit number indicating which
