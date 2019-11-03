@@ -35,7 +35,7 @@
   #include "../../Marlin.h"
 #endif
 
-#if ENABLED(PSU_CONTROL)
+#if HAS_POWER_SWITCH
 
   #if ENABLED(AUTO_POWER_CONTROL)
     #include "../../feature/power.h"
@@ -68,7 +68,7 @@
      * a print without suicide...
      */
     #if HAS_SUICIDE
-      OUT_WRITE(SUICIDE_PIN, !SUICIDE_PIN_INVERTING);
+      OUT_WRITE(SUICIDE_PIN, HIGH);
     #endif
 
     #if DISABLED(AUTO_POWER_CONTROL)
@@ -81,12 +81,12 @@
     #endif
   }
 
-#endif // ENABLED(PSU_CONTROL)
+#endif // HAS_POWER_SWITCH
 
 /**
  * M81: Turn off Power, including Power Supply, if there is one.
  *
- *      This code should ALWAYS be available for FULL SHUTDOWN!
+ *      This code should ALWAYS be available for EMERGENCY SHUTDOWN!
  */
 void GcodeSuite::M81() {
   thermalManager.disable_all_heaters();
@@ -105,11 +105,11 @@ void GcodeSuite::M81() {
 
   #if HAS_SUICIDE
     suicide();
-  #elif ENABLED(PSU_CONTROL)
+  #elif HAS_POWER_SWITCH
     PSU_OFF();
   #endif
 
   #if HAS_LCD_MENU
-    LCD_MESSAGEPGM_P(PSTR(MACHINE_NAME " " MSG_OFF "."));
+    LCD_MESSAGEPGM(MACHINE_NAME " " MSG_OFF ".");
   #endif
 }

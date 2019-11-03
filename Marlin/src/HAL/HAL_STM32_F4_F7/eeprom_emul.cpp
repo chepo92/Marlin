@@ -62,7 +62,7 @@ uint16_t VirtAddVarTab[NB_OF_VAR];
 
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
-static HAL_StatusTypeDef EE_Format();
+static HAL_StatusTypeDef EE_Format(void);
 static uint16_t EE_FindValidPage(uint8_t Operation);
 static uint16_t EE_VerifyPageFullWriteVariable(uint16_t VirtAddress, uint16_t Data);
 static uint16_t EE_PageTransfer(uint16_t VirtAddress, uint16_t Data);
@@ -75,7 +75,7 @@ static uint16_t EE_VerifyPageFullyErased(uint32_t Address);
   * @retval - Flash error code: on write Flash error
   *         - FLASH_COMPLETE: on success
   */
-uint16_t EE_Initialize() {
+uint16_t EE_Initialize(void) {
   /* Get Page0 and Page1 status */
   uint16_t PageStatus0 = (*(__IO uint16_t*)PAGE0_BASE_ADDRESS),
            PageStatus1 = (*(__IO uint16_t*)PAGE1_BASE_ADDRESS);
@@ -85,8 +85,6 @@ uint16_t EE_Initialize() {
   pEraseInit.Sector = PAGE0_ID;
   pEraseInit.NbSectors = 1;
   pEraseInit.VoltageRange = VOLTAGE_RANGE;
-
-  HAL_StatusTypeDef FlashStatus; // = HAL_OK
 
   /* Check for invalid header states and repair if necessary */
   uint32_t SectorError;
@@ -137,7 +135,7 @@ uint16_t EE_Initialize() {
           }
         }
         /* Mark Page0 as valid */
-        FlashStatus = HAL_FLASH_Program(TYPEPROGRAM_HALFWORD, PAGE0_BASE_ADDRESS, VALID_PAGE);
+        HAL_StatusTypeDef FlashStatus = HAL_FLASH_Program(TYPEPROGRAM_HALFWORD, PAGE0_BASE_ADDRESS, VALID_PAGE);
         /* If program operation was failed, a Flash error code is returned */
         if (FlashStatus != HAL_OK) return FlashStatus;
         pEraseInit.Sector = PAGE1_ID;
@@ -331,7 +329,7 @@ uint16_t EE_WriteVariable(uint16_t VirtAddress, uint16_t Data) {
  * @retval Status of the last operation (Flash write or erase) done during
  *         EEPROM formating
  */
-static HAL_StatusTypeDef EE_Format() {
+static HAL_StatusTypeDef EE_Format(void) {
   FLASH_EraseInitTypeDef pEraseInit;
   pEraseInit.TypeErase = FLASH_TYPEERASE_SECTORS;
   pEraseInit.Sector = PAGE0_ID;

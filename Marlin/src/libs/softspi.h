@@ -475,7 +475,7 @@
   static constexpr uint8_t digitalPinCount = sizeof(pinMap) / sizeof(pin_map_t);
 
   /** generate bad pin number error */
-  void badPinNumber()
+  void badPinNumber(void)
     __attribute__((error("Pin number is too large or not a constant")));
 
   /**

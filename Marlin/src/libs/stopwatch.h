@@ -25,9 +25,7 @@
 //#define DEBUG_STOPWATCH
 
 #include "../core/macros.h" // for FORCE_INLINE
-
-#include <stdint.h>
-typedef uint32_t millis_t;
+#include "../core/millis_t.h"
 
 /**
  * @brief Stopwatch class

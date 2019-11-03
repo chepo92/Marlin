@@ -145,7 +145,6 @@ void pca9632_set_led_color(const LEDColor &color) {
     Wire.write(data, sizeof(data));
     Wire.endTransmission();
   }
-
-#endif // PCA9632_BUZZER
+#endif
 
 #endif // PCA9632

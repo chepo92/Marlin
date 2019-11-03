@@ -30,9 +30,9 @@
 #endif
 
 #if MB(MINIRAMBO_10A)
-  #define BOARD_INFO_NAME "Mini RAMBo 1.0a"
+  #define BOARD_NAME "Mini RAMBo 1.0a"
 #else
-  #define BOARD_INFO_NAME "Mini RAMBo"
+  #define BOARD_NAME "Mini RAMBo"
 #endif
 
 //
@@ -141,13 +141,13 @@
 //
 // LCD / Controller
 //
-#if HAS_SPI_LCD || TOUCH_UI_ULTIPANEL
+#if HAS_SPI_LCD
 
   #if !MB(MINIRAMBO_10A)
     #define KILL_PIN       32
   #endif
 
-  #if ENABLED(ULTIPANEL) || TOUCH_UI_ULTIPANEL
+  #if ENABLED(NEWPANEL)
 
     #if MB(MINIRAMBO_10A)
 
@@ -187,6 +187,6 @@
 
     #endif // !MINIRAMBO_10A
 
-  #endif // ULTIPANEL || TOUCH_UI_ULTIPANEL
+  #endif // NEWPANEL
 
 #endif // HAS_SPI_LCD

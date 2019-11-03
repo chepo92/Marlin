@@ -24,7 +24,7 @@
 
 #include "../../inc/MarlinConfigPre.h"
 
-#if ENABLED(FAST_PWM_FAN) || SPINDLE_LASER_PWM
+#if ENABLED(FAST_PWM_FAN)
 
 #include <pwm.h>
 
@@ -36,5 +36,5 @@ void set_pwm_duty(const pin_t pin, const uint16_t v, const uint16_t v_size/*=255
   pwm_write_ratio(pin, invert ? 1.0f - (float)v / v_size : (float)v / v_size);
 }
 
-#endif // FAST_PWM_FAN || SPINDLE_LASER_PWM
+#endif // FAST_PWM_FAN
 #endif // TARGET_LPC1768

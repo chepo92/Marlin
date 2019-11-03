@@ -23,6 +23,8 @@
 
 #include "../inc/MarlinConfigPre.h"
 
+#include <stddef.h>
+
 void host_action(const char * const pstr, const bool eol=true);
 
 #ifdef ACTION_ON_KILL

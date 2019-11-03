@@ -61,27 +61,27 @@ extern "C" {
  * Below BOARD_XXX macros are related to the specific board, and
  * should be defined by the board code, otherwise default value are used.
  */
-#ifndef BOARD_FREQ_SLCK_XTAL
+#if !defined(BOARD_FREQ_SLCK_XTAL)
 #  warning The board slow clock xtal frequency has not been defined.
 #  define BOARD_FREQ_SLCK_XTAL      (32768UL)
 #endif
 
-#ifndef BOARD_FREQ_SLCK_BYPASS
+#if !defined(BOARD_FREQ_SLCK_BYPASS)
 #  warning The board slow clock bypass frequency has not been defined.
 #  define BOARD_FREQ_SLCK_BYPASS    (32768UL)
 #endif
 
-#ifndef BOARD_FREQ_MAINCK_XTAL
+#if !defined(BOARD_FREQ_MAINCK_XTAL)
 #  warning The board main clock xtal frequency has not been defined.
 #  define BOARD_FREQ_MAINCK_XTAL    (12000000UL)
 #endif
 
-#ifndef BOARD_FREQ_MAINCK_BYPASS
+#if !defined(BOARD_FREQ_MAINCK_BYPASS)
 #  warning The board main clock bypass frequency has not been defined.
 #  define BOARD_FREQ_MAINCK_BYPASS  (12000000UL)
 #endif
 
-#ifndef BOARD_OSC_STARTUP_US
+#if !defined(BOARD_OSC_STARTUP_US)
 #  warning The board main clock xtal startup time has not been defined.
 #  define BOARD_OSC_STARTUP_US      (15625UL)
 #endif

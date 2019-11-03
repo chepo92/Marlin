@@ -35,7 +35,7 @@
 // Public functions
 // ------------------------
 
-void HAL_init() {
+void HAL_init(void) {
   // Init Servo Pins
   #define INIT_SERVO(N) OUT_WRITE(SERVO##N##_PIN, LOW)
   #if HAS_SERVO_0

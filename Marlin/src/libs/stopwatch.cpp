@@ -24,10 +24,6 @@
 
 #include "../inc/MarlinConfig.h"
 
-#if ENABLED(EXTENSIBLE_UI)
-  #include "../lcd/extensible_ui/ui_api.h"
-#endif
-
 Stopwatch::State Stopwatch::state;
 millis_t Stopwatch::accumulator;
 millis_t Stopwatch::startTimestamp;
@@ -39,9 +35,6 @@ bool Stopwatch::stop() {
   #endif
 
   if (isRunning() || isPaused()) {
-    #if ENABLED(EXTENSIBLE_UI)
-      ExtUI::onPrintTimerStopped();
-    #endif
     state = STOPPED;
     stopTimestamp = millis();
     return true;
@@ -55,9 +48,6 @@ bool Stopwatch::pause() {
   #endif
 
   if (isRunning()) {
-    #if ENABLED(EXTENSIBLE_UI)
-      ExtUI::onPrintTimerPaused();
-    #endif
     state = PAUSED;
     stopTimestamp = millis();
     return true;
@@ -68,10 +58,6 @@ bool Stopwatch::pause() {
 bool Stopwatch::start() {
   #if ENABLED(DEBUG_STOPWATCH)
     Stopwatch::debug(PSTR("start"));
-  #endif
-
-  #if ENABLED(EXTENSIBLE_UI)
-    ExtUI::onPrintTimerStarted();
   #endif
 
   if (!isRunning()) {

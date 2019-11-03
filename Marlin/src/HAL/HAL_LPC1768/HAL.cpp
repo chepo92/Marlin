@@ -26,18 +26,14 @@
 #include "../shared/Delay.h"
 #include "../../../gcode/parser.h"
 
-#if ENABLED(USE_WATCHDOG)
-  #include "watchdog.h"
-#endif
-
 // U8glib required functions
 extern "C" void u8g_xMicroDelay(uint16_t val) {
   DELAY_US(val);
 }
-extern "C" void u8g_MicroDelay() {
+extern "C" void u8g_MicroDelay(void) {
   u8g_xMicroDelay(1);
 }
-extern "C" void u8g_10MicroDelay() {
+extern "C" void u8g_10MicroDelay(void) {
   u8g_xMicroDelay(10);
 }
 extern "C" void u8g_Delay(uint16_t val) {
@@ -67,19 +63,6 @@ int16_t PARSED_PIN_INDEX(const char code, const int16_t dval) {
 
 void flashFirmware(int16_t value) {
   NVIC_SystemReset();
-}
-
-void HAL_clear_reset_source(void) {
-  #if ENABLED(USE_WATCHDOG)
-    watchdog_clear_timeout_flag();
-  #endif
-}
-
-uint8_t HAL_get_reset_source(void) {
-  #if ENABLED(USE_WATCHDOG)
-    if (watchdog_timed_out()) return RST_WATCHDOG;
-  #endif
-  return RST_POWER_ON;
 }
 
 #endif // TARGET_LPC1768

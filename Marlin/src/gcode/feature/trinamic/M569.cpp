@@ -26,7 +26,7 @@
 
 #include "../../gcode.h"
 #include "../../../feature/tmc_util.h"
-#include "../../../module/stepper/indirection.h"
+#include "../../../module/stepper_indirection.h"
 
 template<typename TMC>
 void tmc_say_stealth_status(TMC &st) {

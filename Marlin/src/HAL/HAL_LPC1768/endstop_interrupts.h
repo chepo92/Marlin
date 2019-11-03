@@ -38,74 +38,73 @@
 #include "../../module/endstops.h"
 
 // One ISR for all EXT-Interrupts
-void endstop_ISR() { endstops.update(); }
+void endstop_ISR(void) { endstops.update(); }
 
-void setup_endstop_interrupts() {
-  #define _ATTACH(P) attachInterrupt(digitalPinToInterrupt(P), endstop_ISR, CHANGE)
+void setup_endstop_interrupts(void) {
   #if HAS_X_MAX
     #if !LPC1768_PIN_INTERRUPT_M(X_MAX_PIN)
-      #error "X_MAX_PIN is not INTERRUPT-capable."
+      #error "X_MAX_PIN is not an INTERRUPT capable pin."
     #endif
-    _ATTACH(X_MAX_PIN);
+    attachInterrupt(digitalPinToInterrupt(X_MAX_PIN), endstop_ISR, CHANGE);
   #endif
   #if HAS_X_MIN
     #if !LPC1768_PIN_INTERRUPT_M(X_MIN_PIN)
-      #error "X_MIN_PIN is not INTERRUPT-capable."
+      #error "X_MIN_PIN is not an INTERRUPT capable pin."
     #endif
-    _ATTACH(X_MIN_PIN);
+    attachInterrupt(digitalPinToInterrupt(X_MIN_PIN), endstop_ISR, CHANGE);
   #endif
   #if HAS_Y_MAX
     #if !LPC1768_PIN_INTERRUPT_M(Y_MAX_PIN)
-      #error "Y_MAX_PIN is not INTERRUPT-capable."
+      #error "Y_MAX_PIN is not an INTERRUPT capable pin."
     #endif
-    _ATTACH(Y_MAX_PIN);
+    attachInterrupt(digitalPinToInterrupt(Y_MAX_PIN), endstop_ISR, CHANGE);
   #endif
   #if HAS_Y_MIN
     #if !LPC1768_PIN_INTERRUPT_M(Y_MIN_PIN)
-      #error "Y_MIN_PIN is not INTERRUPT-capable."
+      #error "Y_MIN_PIN is not an INTERRUPT capable pin."
     #endif
-    _ATTACH(Y_MIN_PIN);
+    attachInterrupt(digitalPinToInterrupt(Y_MIN_PIN), endstop_ISR, CHANGE);
   #endif
   #if HAS_Z_MAX
     #if !LPC1768_PIN_INTERRUPT_M(Z_MAX_PIN)
-      #error "Z_MAX_PIN is not INTERRUPT-capable."
+      #error "Z_MAX_PIN is not an INTERRUPT capable pin."
     #endif
-    _ATTACH(Z_MAX_PIN);
+    attachInterrupt(digitalPinToInterrupt(Z_MAX_PIN), endstop_ISR, CHANGE);
   #endif
   #if HAS_Z_MIN
     #if !LPC1768_PIN_INTERRUPT_M(Z_MIN_PIN)
-      #error "Z_MIN_PIN is not INTERRUPT-capable."
+      #error "Z_MIN_PIN is not an INTERRUPT capable pin."
     #endif
-     _ATTACH(Z_MIN_PIN);
+     attachInterrupt(digitalPinToInterrupt(Z_MIN_PIN), endstop_ISR, CHANGE);
   #endif
   #if HAS_Z2_MAX
     #if !LPC1768_PIN_INTERRUPT_M(Z2_MAX_PIN)
-      #error "Z2_MAX_PIN is not INTERRUPT-capable."
+      #error "Z2_MAX_PIN is not an INTERRUPT capable pin."
     #endif
-    _ATTACH(Z2_MAX_PIN);
+    attachInterrupt(digitalPinToInterrupt(Z2_MAX_PIN), endstop_ISR, CHANGE);
   #endif
   #if HAS_Z2_MIN
     #if !LPC1768_PIN_INTERRUPT_M(Z2_MIN_PIN)
-      #error "Z2_MIN_PIN is not INTERRUPT-capable."
+      #error "Z2_MIN_PIN is not an INTERRUPT capable pin."
     #endif
-    _ATTACH(Z2_MIN_PIN);
+    attachInterrupt(digitalPinToInterrupt(Z2_MIN_PIN), endstop_ISR, CHANGE);
   #endif
   #if HAS_Z3_MAX
     #if !LPC1768_PIN_INTERRUPT_M(Z3_MIN_PIN)
-      #error "Z3_MIN_PIN is not INTERRUPT-capable."
+      #error "Z3_MIN_PIN is not an INTERRUPT capable pin."
     #endif
-    _ATTACH(Z3_MAX_PIN);
+    attachInterrupt(digitalPinToInterrupt(Z3_MAX_PIN), endstop_ISR, CHANGE);
   #endif
   #if HAS_Z3_MIN
     #if !LPC1768_PIN_INTERRUPT_M(Z3_MIN_PIN)
-      #error "Z3_MIN_PIN is not INTERRUPT-capable."
+      #error "Z3_MIN_PIN is not an INTERRUPT capable pin."
     #endif
-    _ATTACH(Z3_MIN_PIN);
+    attachInterrupt(digitalPinToInterrupt(Z3_MIN_PIN), endstop_ISR, CHANGE);
   #endif
   #if HAS_Z_MIN_PROBE_PIN
     #if !LPC1768_PIN_INTERRUPT_M(Z_MIN_PROBE_PIN)
-      #error "Z_MIN_PROBE_PIN is not INTERRUPT-capable."
+      #error "Z_MIN_PROBE_PIN is not an INTERRUPT capable pin."
     #endif
-    _ATTACH(Z_MIN_PROBE_PIN);
+    attachInterrupt(digitalPinToInterrupt(Z_MIN_PROBE_PIN), endstop_ISR, CHANGE);
   #endif
 }

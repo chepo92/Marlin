@@ -89,7 +89,7 @@ uint8_t digipot_mcp4451_start(uint8_t sla) {  // send slave address and write bi
   return 1;
 }
 
-void digipot_mcp4451_init() {
+void digipot_mcp4451_init(void) {
   /**
    * Init I2C pin connect
    */

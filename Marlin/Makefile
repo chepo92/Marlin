@@ -251,10 +251,6 @@ else ifeq ($(HARDWARE_MOTHERBOARD),1141)
 else ifeq ($(HARDWARE_MOTHERBOARD),1142)
 # Overlord/Overlord Pro
 else ifeq ($(HARDWARE_MOTHERBOARD),1143)
-# ADIMLab Gantry v1
-else ifeq ($(HARDWARE_MOTHERBOARD),1144)
-# ADIMLab Gantry v2
-else ifeq ($(HARDWARE_MOTHERBOARD),1145)
 
 #
 # RAMBo and derivatives
@@ -281,44 +277,42 @@ else ifeq ($(HARDWARE_MOTHERBOARD),1205)
 else ifeq ($(HARDWARE_MOTHERBOARD),1300)
 # Cartesio CN Controls V12
 else ifeq ($(HARDWARE_MOTHERBOARD),1301)
-# Cartesio CN Controls V15
-else ifeq ($(HARDWARE_MOTHERBOARD),1302)
 # Cheaptronic v1.0
-else ifeq ($(HARDWARE_MOTHERBOARD),1303)
+else ifeq ($(HARDWARE_MOTHERBOARD),1302)
 # Cheaptronic v2.0
-else ifeq ($(HARDWARE_MOTHERBOARD),1304)
+else ifeq ($(HARDWARE_MOTHERBOARD),1303)
 # Makerbot Mightyboard Revision E
-else ifeq ($(HARDWARE_MOTHERBOARD),1305)
+else ifeq ($(HARDWARE_MOTHERBOARD),1304)
 # Megatronics
-else ifeq ($(HARDWARE_MOTHERBOARD),1306)
+else ifeq ($(HARDWARE_MOTHERBOARD),1305)
 # Megatronics v2.0
-else ifeq ($(HARDWARE_MOTHERBOARD),1307)
+else ifeq ($(HARDWARE_MOTHERBOARD),1306)
 # Megatronics v3.0
-else ifeq ($(HARDWARE_MOTHERBOARD),1308)
+else ifeq ($(HARDWARE_MOTHERBOARD),1307)
 # Megatronics v3.1
-else ifeq ($(HARDWARE_MOTHERBOARD),1309)
+else ifeq ($(HARDWARE_MOTHERBOARD),1308)
 # Megatronics v3.2
-else ifeq ($(HARDWARE_MOTHERBOARD),1310)
+else ifeq ($(HARDWARE_MOTHERBOARD),1309)
 # Elefu Ra Board (v3)
-else ifeq ($(HARDWARE_MOTHERBOARD),1311)
+else ifeq ($(HARDWARE_MOTHERBOARD),1310)
 # Leapfrog
-else ifeq ($(HARDWARE_MOTHERBOARD),1312)
+else ifeq ($(HARDWARE_MOTHERBOARD),1311)
 # Mega controller
-else ifeq ($(HARDWARE_MOTHERBOARD),1313)
+else ifeq ($(HARDWARE_MOTHERBOARD),1312)
 # Geeetech GT2560 Rev B for Mecreator2
-else ifeq ($(HARDWARE_MOTHERBOARD),1314)
+else ifeq ($(HARDWARE_MOTHERBOARD),1313)
 # Geeetech GT2560 Rev. A
-else ifeq ($(HARDWARE_MOTHERBOARD),1315)
+else ifeq ($(HARDWARE_MOTHERBOARD),1314)
 # Geeetech GT2560 Rev. A+ (with auto level probe)
-else ifeq ($(HARDWARE_MOTHERBOARD),1316)
+else ifeq ($(HARDWARE_MOTHERBOARD),1315)
 # Geeetech GT2560 Rev B for A10(M/D)
-else ifeq ($(HARDWARE_MOTHERBOARD),1317)
+else ifeq ($(HARDWARE_MOTHERBOARD),1316)
 # Geeetech GT2560 Rev B for A20(M/D)
-else ifeq ($(HARDWARE_MOTHERBOARD),1318)
+else ifeq ($(HARDWARE_MOTHERBOARD),1317)
 # Einstart retrofit
-else ifeq ($(HARDWARE_MOTHERBOARD),1319)
+else ifeq ($(HARDWARE_MOTHERBOARD),1318)
 # Wanhao 0ne+ i3 Mini
-else ifeq ($(HARDWARE_MOTHERBOARD),1320)
+else ifeq ($(HARDWARE_MOTHERBOARD),1319)
 
 #
 # ATmega1281, ATmega2561
@@ -693,7 +687,7 @@ CXXSTANDARD = -std=gnu++11
 CDEBUG = -g$(DEBUG)
 CWARN   = -Wall -Wstrict-prototypes -Wno-packed-bitfield-compat -Wno-pragmas -Wunused-parameter
 CXXWARN = -Wall                     -Wno-packed-bitfield-compat -Wno-pragmas -Wunused-parameter
-CTUNING = -fsigned-char -funsigned-bitfields -fno-exceptions \
+CTUNING = -fsigned-char -funsigned-bitfields -fpack-struct -fno-exceptions \
           -fshort-enums -ffunction-sections -fdata-sections
 ifneq ($(HARDWARE_MOTHERBOARD),)
   CTUNING += -DMOTHERBOARD=${HARDWARE_MOTHERBOARD}

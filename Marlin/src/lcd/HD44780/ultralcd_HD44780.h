@@ -64,14 +64,10 @@
   #define LED_B 0x02 //010
   #define LED_C 0x01 //001
 
-  // #include <Wire.h>
-  // #include <LiquidTWI2.h>
-  // #define LCD_CLASS LiquidTWI2
-  // #if ENABLED(DETECT_DEVICE)
-    // LCD_CLASS lcd(LCD_I2C_ADDRESS, 1);
-  // #else
-    // LCD_CLASS lcd(LCD_I2C_ADDRESS);
-  // #endif
+  #include <Wire.h>
+  #include <LiquidTWI2.h>
+  #define LCD_CLASS LiquidTWI2
+  
 
 #elif ENABLED(LCD_I2C_TYPE_MCP23008)
   #include <Wire.h>

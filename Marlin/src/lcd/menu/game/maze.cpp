@@ -80,7 +80,10 @@ void MazeGame::game_screen() {
   u8g.setColorIndex(1);
 
   // Draw Score
-  if (PAGE_UNDER(HEADER_H)) lcd_put_int(0, HEADER_H - 1, score);
+  if (PAGE_UNDER(HEADER_H)) {
+    lcd_moveto(0, HEADER_H - 1);
+    lcd_put_int(score);
+  }
 
   // Draw the maze
   // for (uint8_t n = 0; n < head_ind; ++n) {

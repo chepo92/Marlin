@@ -29,7 +29,7 @@
 #include "lpc17xx_wdt.h"
 #include "watchdog.h"
 
-void watchdog_init() {
+void watchdog_init(void) {
   #if ENABLED(WATCHDOG_RESET_MANUAL)
     // We enable the watchdog timer, but only for the interrupt.
 
@@ -56,16 +56,28 @@ void watchdog_init() {
   WDT_Start(WDT_TIMEOUT);
 }
 
-void HAL_watchdog_refresh() {
+void HAL_clear_reset_source(void) {
+  WDT_ClrTimeOutFlag();
+}
+
+uint8_t HAL_get_reset_source(void) {
+  if (TEST(WDT_ReadTimeOutFlag(), 0)) return RST_WATCHDOG;
+  return RST_POWER_ON;
+}
+
+void watchdog_reset() {
   WDT_Feed();
   #if DISABLED(PINS_DEBUGGING) && PIN_EXISTS(LED)
     TOGGLE(LED_PIN);  // heartbeat indicator
   #endif
 }
 
-// Timeout state
-bool watchdog_timed_out() { return TEST(WDT_ReadTimeOutFlag(), 0); }
-void watchdog_clear_timeout_flag() { WDT_ClrTimeOutFlag(); }
+#else
+
+void watchdog_init(void) {}
+void watchdog_reset(void) {}
+void HAL_clear_reset_source(void) {}
+uint8_t HAL_get_reset_source(void) { return RST_POWER_ON; }
 
 #endif // USE_WATCHDOG
 

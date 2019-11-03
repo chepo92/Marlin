@@ -103,7 +103,7 @@ public:
   // ISR for Rx
   void store_rxd_char();
   // ISR for Tx (UDRE vector)
-  void tx_udr_empty_irq();
+  void tx_udr_empty_irq(void);
 
   inline volatile bool is_rx_overrun() {
     return dgus_rx_overrun;
@@ -289,11 +289,11 @@ void DGUSScreenVariableHandler::DGUSLCD_SendStringToDisplayPGM(DGUS_VP_Variable 
 
     // Don't let the user in the dark why there is no reaction.
     if (!ExtUI::isMediaInserted()) {
-       setstatusmessagePGM(GET_TEXT(MSG_NO_MEDIA));
+       setstatusmessagePGM(PSTR("No SD Card"));
        return;
     }
     if (card.flag.abort_sd_printing) {
-       setstatusmessagePGM(GET_TEXT(MSG_MEDIA_ABORTING));
+       setstatusmessagePGM(PSTR("Aborting..."));
        return;
     }
   }
@@ -313,7 +313,7 @@ void DGUSScreenVariableHandler::DGUSLCD_SendStringToDisplayPGM(DGUS_VP_Variable 
       DEBUG_ECHOPAIR("new topfile calculated:", top_file);
       if (top_file < 0) {
         top_file = 0;
-        DEBUG_ECHOLNPGM("Top of filelist reached");
+        DEBUG_ECHOLN("Top of filelist reached");
       }
       else {
         int16_t max_top = filelist.count() -  DGUS_SD_FILESPERSCREEN;
@@ -472,13 +472,13 @@ void DGUSScreenVariableHandler::HandleTemperatureChanged(DGUS_VP_Variable &var, 
   switch (var.VP) {
     default: return;
     #if HOTENDS >= 1
-      case VP_T_E0_Set:
+      case VP_T_E1_Set:
         thermalManager.setTargetHotend(newvalue, 0);
         acceptedvalue = thermalManager.temp_hotend[0].target;
         break;
     #endif
     #if HOTENDS >= 2
-      case VP_T_E1_Set:
+      case VP_T_E2_Set:
         thermalManager.setTargetHotend(newvalue, 1);
         acceptedvalue = thermalManager.temp_hotend[1].target;
       break;
@@ -497,25 +497,21 @@ void DGUSScreenVariableHandler::HandleTemperatureChanged(DGUS_VP_Variable &var, 
 }
 
 void DGUSScreenVariableHandler::HandleFlowRateChanged(DGUS_VP_Variable &var, void *val_ptr) {
-  #if EXTRUDERS
-    uint16_t newvalue = swap16(*(uint16_t*)val_ptr);
-    uint8_t target_extruder;
-    switch (var.VP) {
-      default: return;
-      #if (HOTENDS >= 1)
-        case VP_Flowrate_E0: target_extruder = 0; break;
-      #endif
-      #if (HOTENDS >= 2)
-        case VP_Flowrate_E1: target_extruder = 1; break;
-      #endif
-    }
+  uint16_t newvalue = swap16(*(uint16_t*)val_ptr);
+  uint8_t target_extruder;
+  switch (var.VP) {
+    default: return;
+    #if (HOTENDS >= 1)
+      case VP_Flowrate_E1: target_extruder = 0; break;
+    #endif
+    #if (HOTENDS >= 2)
+      case VP_Flowrate_E2: target_extruder = 1; break;
+    #endif
+  }
 
-    planner.flow_percentage[target_extruder] = newvalue;
-    planner.refresh_e_factor(target_extruder);
-    ScreenHandler.skipVP = var.VP; // don't overwrite value the next update time as the display might autoincrement in parallel
-  #else
-    UNUSED(var); UNUSED(val_ptr);
-  #endif
+  planner.flow_percentage[target_extruder] = newvalue;
+  planner.refresh_e_factor(target_extruder);
+  ScreenHandler.skipVP = var.VP; // don't overwrite value the next update time as the display might autoincrement in parallel
 }
 
 void DGUSScreenVariableHandler::HandleManualExtrude(DGUS_VP_Variable &var, void *val_ptr) {
@@ -526,11 +522,11 @@ void DGUSScreenVariableHandler::HandleManualExtrude(DGUS_VP_Variable &var, void 
   ExtUI::extruder_t target_extruder;
 
   switch (var.VP) {
-    #if HOTENDS >= 1
-      case VP_MOVE_E0: target_extruder = ExtUI::extruder_t::E0; break;
+    #if HOTENDS >=1
+      case VP_MOVE_E1: target_extruder = ExtUI::extruder_t::E0; break;
     #endif
-    #if HOTENDS >= 2
-      case VP_MOVE_E1: target_extruder = ExtUI::extruder_t::E1; break
+    #if HOTENDS >=2
+      case VP_MOVE_E2: target_extruder = ExtUI::extruder_t::E1; break
     #endif
     default: return;
   }
@@ -579,7 +575,7 @@ void DGUSScreenVariableHandler::HandleManualMove(DGUS_VP_Variable &var, void *va
     buf[4] = axiscode;
     //DEBUG_ECHOPAIR(" ", buf);
     while (!enqueue_and_echo_command(buf)) idle();
-    //DEBUG_ECHOLNPGM(" ✓");
+    //DEBUG_ECHOLN(" ✓");
     ScreenHandler.ForceCompleteUpdate();
     return;
   }
@@ -588,7 +584,7 @@ void DGUSScreenVariableHandler::HandleManualMove(DGUS_VP_Variable &var, void *va
     DEBUG_ECHOPAIR(" move ", axiscode);
     bool old_relative_mode = relative_mode;
     if (!relative_mode) {
-      //DEBUG_ECHOPGM(" G91");
+      //DEBUG_ECHO(" G91");
       while (!enqueue_and_echo_command("G91")) idle();
       //DEBUG_ECHOPGM(" ✓ ");
     }
@@ -601,18 +597,18 @@ void DGUSScreenVariableHandler::HandleManualMove(DGUS_VP_Variable &var, void *va
     snprintf_P(buf, 32, PSTR("G0 %c%s%d.%02d F%d"), axiscode, sign, value, fraction, speed);
     //DEBUG_ECHOPAIR(" ", buf);
     while (!enqueue_and_echo_command(buf)) idle();
-    //DEBUG_ECHOLNPGM(" ✓ ");
+    //DEBUG_ECHOLN(" ✓ ");
     if (backup_speed != speed) {
       snprintf_P(buf, 32, PSTR("G0 F%d"), backup_speed);
       while (!enqueue_and_echo_command(buf)) idle();
       //DEBUG_ECHOPAIR(" ", buf);
     }
     //while (!enqueue_and_echo_command(buf)) idle();
-    //DEBUG_ECHOLNPGM(" ✓ ");
+    //DEBUG_ECHOLN(" ✓ ");
     if (!old_relative_mode) {
-      //DEBUG_ECHOPGM("G90");
+      //DEBUG_ECHO("G90");
       while (!enqueue_and_echo_command("G90")) idle();
-      //DEBUG_ECHOPGM(" ✓ ");
+      //DEBUG_ECHO(" ✓ ");
     }
   }
 
@@ -1013,7 +1009,7 @@ FORCE_INLINE void DGUSSerial::store_rxd_char() {
 }
 
 // (called with TX irqs disabled)
-FORCE_INLINE void DGUSSerial::tx_udr_empty_irq() {
+FORCE_INLINE void DGUSSerial::tx_udr_empty_irq(void) {
   // Read positions
   uint8_t t = tx_buffer.tail;
   const uint8_t h = tx_buffer.head;
@@ -1039,7 +1035,7 @@ FORCE_INLINE void DGUSSerial::tx_udr_empty_irq() {
   if (h == t) CBI(DGUS_UCSRxB, UDRIEx);
 }
 
-r_ring_buffer_pos_t DGUSSerial::available() {
+r_ring_buffer_pos_t DGUSSerial::available(void) {
   const r_ring_buffer_pos_t h = atomic_read_rx_head(), t = rx_buffer.tail;
   return (r_ring_buffer_pos_t) (DGUS_RX_BUFFER_SIZE + h - t) & (DGUS_RX_BUFFER_SIZE - 1);
 }

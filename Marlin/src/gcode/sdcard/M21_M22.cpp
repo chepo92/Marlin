@@ -30,7 +30,7 @@
 /**
  * M21: Init SD Card
  */
-void GcodeSuite::M21() { card.mount(); }
+void GcodeSuite::M21() { card.initsd(); }
 
 /**
  * M22: Release SD Card

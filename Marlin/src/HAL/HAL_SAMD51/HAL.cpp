@@ -59,12 +59,12 @@
 #else
   #define GET_TEMP_5_ADC()          -1
 #endif
-#if HAS_TEMP_ADC_BED
+#if HAS_HEATED_BED
   #define GET_BED_ADC()             PIN_TO_ADC(TEMP_BED_PIN)
 #else
   #define GET_BED_ADC()             -1
 #endif
-#if HAS_TEMP_ADC_CHAMBER
+#if HAS_HEATED_CHAMBER
   #define GET_CHAMBER_ADC()         PIN_TO_ADC(TEMP_CHAMBER_PIN)
 #else
   #define GET_CHAMBER_ADC()         -1
@@ -368,13 +368,12 @@ uint16_t HAL_adc_result;
 // ------------------------
 
 // HAL initialization task
-void HAL_init() {
+void HAL_init(void) {
   #if DMA_IS_REQUIRED
     dma_init();
   #endif
   #if ENABLED(SDSUPPORT)
-    // SD_DETECT_PIN may be removed if NO_SD_HOST_DRIVE is not defined in Configuration_adv.h
-    #if SD_CONNECTION_IS(ONBOARD) && PIN_EXISTS(SD_DETECT)
+    #if SD_CONNECTION_IS(ONBOARD) && PIN_EXISTS(SD_DETECT)    // SD_DETECT_PIN may be remove when NO_SD_HOST_DRIVE is not defined in configuration_adv
       SET_INPUT_PULLUP(SD_DETECT_PIN);
     #endif
     OUT_WRITE(SDSS, HIGH);  // Try to set SDSS inactive before any other SPI users start up
@@ -383,15 +382,15 @@ void HAL_init() {
 
 // HAL idle task
 /*
-void HAL_idletask() {
+void HAL_idletask(void) {
 }
 */
 
-void HAL_clear_reset_source() { }
+void HAL_clear_reset_source(void) { }
 
 #pragma push_macro("WDT")
 #undef WDT    // Required to be able to use '.bit.WDT'. Compiler wrongly replace struct field with WDT define
-uint8_t HAL_get_reset_source() {
+uint8_t HAL_get_reset_source(void) {
   RSTC_RCAUSE_Type resetCause;
 
   resetCause.reg = REG_RSTC_RCAUSE;
@@ -414,14 +413,14 @@ extern "C" {
 // Return free memory between end of heap (or end bss) and whatever is current
 int freeMemory() {
   int free_memory, heap_end = (int)_sbrk(0);
-  return (int)&free_memory - (heap_end ?: (int)&__bss_end__);
+  return (int)&free_memory - (heap_end ? heap_end : (int)&__bss_end__);
 }
 
 // ------------------------
 // ADC
 // ------------------------
 
-void HAL_adc_init() {
+void HAL_adc_init(void) {
   #if ADC_IS_REQUIRED
     memset(HAL_adc_results, 0xFF, sizeof(HAL_adc_results));                 // Fill result with invalid values
 
@@ -469,7 +468,7 @@ void HAL_adc_start_conversion(const uint8_t adc_pin) {
   HAL_adc_result = 0xFFFF;
 }
 
-uint16_t HAL_adc_get_result() {
+uint16_t HAL_adc_get_result(void) {
   return HAL_adc_result;
 }
 

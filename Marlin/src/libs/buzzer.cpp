@@ -22,7 +22,7 @@
 
 #include "../inc/MarlinConfig.h"
 
-#if USE_BEEPER
+#if DISABLED(LCD_USE_I2C_BUZZER) && PIN_EXISTS(BEEPER)
 
 #include "buzzer.h"
 #include "../module/temperature.h"
@@ -78,4 +78,4 @@ void Buzzer::tick() {
   else if (ELAPSED(now, state.endtime)) reset();
 }
 
-#endif // USE_BEEPER
+#endif // !LCD_USE_I2C_BUZZER && BEEPER

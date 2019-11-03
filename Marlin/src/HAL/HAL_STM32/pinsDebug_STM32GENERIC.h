@@ -29,11 +29,9 @@
 #ifdef BOARD_NR_GPIO_PINS  // Only in STM32GENERIC (Maple)
 
 #ifdef __STM32F1__
-  #include "../HAL_STM32F1/fastio.h"
+  #include "../HAL_STM32F1/fastio_STM32F1.h"
 #elif defined(STM32F4) || defined(STM32F7)
-  #include "../HAL_STM32_F4_F7/fastio.h"
-#else
-  #include "fastio.h"
+  #include "../HAL_STM32_F4_F7/fastio_STM32_F4_F7.h"
 #endif
 
 extern const stm32_pin_info PIN_MAP[BOARD_NR_GPIO_PINS];

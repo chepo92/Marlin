@@ -27,8 +27,7 @@
 
 #include "../sd/cardreader.h"
 #include "../module/printcounter.h"
-#include "../module/planner.h"
-#include "../module/stepper.h" // for block_t
+#include "../module/stepper.h"
 #include "../gcode/queue.h"
 
 #include "../inc/MarlinConfig.h"
@@ -45,8 +44,6 @@
 #ifndef FILAMENT_RUNOUT_THRESHOLD
   #define FILAMENT_RUNOUT_THRESHOLD 5
 #endif
-
-void event_filament_runout();
 
 class FilamentMonitorBase {
   public:
@@ -100,11 +97,7 @@ class TFilamentMonitor : public FilamentMonitorBase {
 
     // Give the response a chance to update its counter.
     static inline void run() {
-      if (enabled && !filament_ran_out && (printingIsActive()
-        #if ENABLED(ADVANCED_PAUSE_FEATURE)
-          || did_pause_print
-        #endif
-      )) {
+      if (enabled && !filament_ran_out && (IS_SD_PRINTING() || print_job_timer.isRunning() || did_pause_print)) {
         #ifdef FILAMENT_RUNOUT_DISTANCE_MM
           cli(); // Prevent RunoutResponseDelayed::block_completed from accumulating here
         #endif
@@ -256,8 +249,6 @@ class FilamentSensorBase {
               && (dual_x_carriage_mode == DXC_DUPLICATION_MODE || dual_x_carriage_mode == DXC_MIRRORED_MODE)
             #elif ENABLED(MULTI_NOZZLE_DUPLICATION)
               && extruder_duplication_enabled
-            #else
-              && false
             #endif
           #endif
         ) return runout_states;               // Any extruder
@@ -268,7 +259,7 @@ class FilamentSensorBase {
       }
 
     public:
-      static inline void block_completed(const block_t* const) {}
+      static inline void block_completed(const block_t* const b) { UNUSED(b); }
 
       static inline void run() {
         const bool out = poll_runout_state(active_extruder);
@@ -329,14 +320,14 @@ class FilamentSensorBase {
       }
 
       static inline void block_completed(const block_t* const b) {
-        if (b->steps.x || b->steps.y || b->steps.z
+        if (b->steps[X_AXIS] || b->steps[Y_AXIS] || b->steps[Z_AXIS]
           #if ENABLED(ADVANCED_PAUSE_FEATURE)
             || did_pause_print // Allow pause purge move to re-trigger runout state
           #endif
         ) {
           // Only trigger on extrusion with XYZ movement to allow filament change and retract/recover.
           const uint8_t e = b->extruder;
-          const int32_t steps = b->steps.e;
+          const int32_t steps = b->steps[E_AXIS];
           runout_mm_countdown[e] -= (TEST(b->direction_bits, E_AXIS) ? -steps : steps) * planner.steps_to_mm[E_AXIS_N(e)];
         }
       }
@@ -355,8 +346,8 @@ class FilamentSensorBase {
       static inline void reset()                                  { runout_count = runout_threshold; }
       static inline void run()                                    { if (runout_count >= 0) runout_count--; }
       static inline bool has_run_out()                            { return runout_count < 0; }
-      static inline void block_completed(const block_t* const)    { }
-      static inline void filament_present(const uint8_t)          { runout_count = runout_threshold; }
+      static inline void block_completed(const block_t* const b)  { UNUSED(b); }
+      static inline void filament_present(const uint8_t extruder) { runout_count = runout_threshold; UNUSED(extruder); }
   };
 
 #endif // !FILAMENT_RUNOUT_DISTANCE_MM
