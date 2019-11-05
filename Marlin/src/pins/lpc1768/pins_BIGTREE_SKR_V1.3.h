@@ -21,11 +21,11 @@
  */
 #pragma once
 
-#ifndef TARGET_LPC1768
-  #error "Oops!  Make sure you have the LPC1768 environment selected in your IDE."
+#ifndef MCU_LPC1768
+  #error "Oops! Make sure you have the LPC1768 environment selected in your IDE."
 #endif
 
-#define BOARD_NAME "BIGTREE SKR 1.3"
+#define BOARD_INFO_NAME "BIGTREE SKR 1.3"
 
 // Ignore temp readings during development.
 //#define BOGUS_TEMPERATURE_GRACE_PERIOD 2000
@@ -33,7 +33,9 @@
 //
 // Servos
 //
-#define SERVO0_PIN         P2_00
+#ifndef SERVO0_PIN
+  #define SERVO0_PIN       P2_00
+#endif
 
 //
 // Limit Switches
@@ -158,21 +160,31 @@
 // Temperature Sensors
 //  3.3V max when defined as an analog input
 //
-#define TEMP_BED_PIN       0   // A0 (T0) - (67) - TEMP_BED_PIN
-#define TEMP_0_PIN         1   // A1 (T1) - (68) - TEMP_0_PIN
-#define TEMP_1_PIN         2   // A2 (T2) - (69) - TEMP_1_PIN
+#define TEMP_BED_PIN       P0_23_A0   // A0 (T0) - (67) - TEMP_BED_PIN
+#define TEMP_0_PIN         P0_24_A1   // A1 (T1) - (68) - TEMP_0_PIN
+#define TEMP_1_PIN         P0_25_A2   // A2 (T2) - (69) - TEMP_1_PIN
 
 //
 // Heaters / Fans
 //
-#define HEATER_0_PIN       P2_07
-#if HOTENDS == 1
-  #define FAN1_PIN         P2_04
-#else
-  #define HEATER_1_PIN     P2_04
+#ifndef HEATER_0_PIN
+  #define HEATER_0_PIN     P2_07
 #endif
-#define FAN_PIN            P2_03
-#define HEATER_BED_PIN     P2_05
+#if HOTENDS == 1
+  #ifndef FAN1_PIN
+    #define FAN1_PIN       P2_04
+  #endif
+#else
+  #ifndef HEATER_1_PIN
+    #define HEATER_1_PIN   P2_04
+  #endif
+#endif
+#ifndef FAN_PIN
+  #define FAN_PIN          P2_03
+#endif
+#ifndef HEATER_BED_PIN
+  #define HEATER_BED_PIN   P2_05
+#endif
 
 /**
  *              _____                                             _____
