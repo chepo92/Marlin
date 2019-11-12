@@ -69,6 +69,15 @@
 
 #endif
 
+#if ENABLED(LCD_I2C_VIKI)
+      #define BTN_EN1           22  
+      #define BTN_EN2           7
+      #define BTN_ENC           -1
+
+      #define LCD_SDSS          53
+      #define SD_DETECT_PIN     49
+#endif
+
 //
 // Misc
 //
