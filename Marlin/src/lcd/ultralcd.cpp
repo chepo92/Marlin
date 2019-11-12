@@ -61,8 +61,8 @@
   MarlinUI::progress_t MarlinUI::progress_override; // = 0
 #endif
 
-#if HAS_BUZZER
-  #include "../libs/buzzer.h"
+#if ENABLED(PCA9632_BUZZER) || USE_BEEPER
+  #include "../libs/buzzer.h" // for BUZZ() macro
   #if ENABLED(PCA9632_BUZZER)
     #include "../feature/leds/pca9632.h"
   #endif
@@ -1233,11 +1233,11 @@ void MarlinUI::update() {
 
         #endif // UP || DWN || LFT || RT
 
-        buttons = newbutton
+        buttons = (newbutton
           #if HAS_SLOW_BUTTONS
             | slow_buttons
           #endif
-        ;
+        );
 
       #elif HAS_ADC_BUTTONS
 
@@ -1254,13 +1254,13 @@ void MarlinUI::update() {
 
       #if HAS_SHIFT_ENCODER
 
-        GET_SHIFT_BUTTON_STATES(
+        GET_SHIFT_BUTTON_STATES((
           #if ENABLED(REPRAPWORLD_KEYPAD)
             keypad_buttons
           #else
             buttons
           #endif
-        );
+        ));
 
       #endif
 
