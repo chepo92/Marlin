@@ -36,11 +36,11 @@ static void jiggle_axis(const char axis_char, const float &min, const float &max
   char gcode_string[30], str1[11], str2[11];
 
   // Turn the motor(s) both directions
-  sprintf_P(gcode_string, PSTR("G0 %c%s F%s"), axis_char, dtostrf(min, 1, 3, str1), dtostrf(rate, 1, 3, str2));
-  process_subcommands_now(gcode_string);
+  sprintf_P(gcode_string, PSTR("G0 %c%s F%s"), axis_char, dtostrf(min, 1, 3, str1), dtostrf(fr_mm_m, 1, 3, str2));
+  gcode.process_subcommands_now(gcode_string);
 
   sprintf_P(gcode_string, PSTR("G0 %c%s F%s"), axis_char, dtostrf(max, 1, 3, str1), str2);
-  process_subcommands_now(gcode_string);
+  gcode.process_subcommands_now(gcode_string);
 
   planner.synchronize();
 }
@@ -258,7 +258,7 @@ void GcodeSuite::M917() {
         }
         DEBUG_ECHOLNPGM(".");
         reset_stepper_timeout(); // reset_stepper_timeout to keep steppers powered
-        watchdog_reset();   // beat the dog
+        watchdog_refresh();
         safe_delay(5000);
         status_composite_temp = 0;
         for (j = 0; j < driver_count; j++) {
