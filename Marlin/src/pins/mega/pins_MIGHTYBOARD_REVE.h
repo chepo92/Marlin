@@ -201,7 +201,7 @@
 // Misc. Functions
 //
 #define LED_PIN            13   // B7
-#define CUTOFF_RESET_PIN   16   // H1
+#define CUTOFF_RESET_PIN   16   // H1     // M42 P16 S255 
 #define CUTOFF_TEST_PIN    17   // H0
 
 //
