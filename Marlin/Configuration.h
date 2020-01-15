@@ -1850,7 +1850,7 @@
 // https://github.com/mikeshub/SailfishLCD
 // Uses the code directly from Sailfish
 //
-//#define FF_INTERFACEBOARD
+#define FF_INTERFACEBOARD
 
 //=============================================================================
 //=======================   LCD / Controller Selection  =======================
