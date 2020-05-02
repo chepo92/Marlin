@@ -19,15 +19,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
 #ifdef ARDUINO_ARCH_ESP32
 
 #include "../../inc/MarlinConfig.h"
 
-#if ENABLED(EEPROM_SETTINGS) && DISABLED(FLASH_EEPROM_EMULATION)
+#if ENABLED(EEPROM_SETTINGS)
 
 #include "../shared/eeprom_api.h"
-#include "EEPROM.h"
+#include <EEPROM.h>
 
 #define EEPROM_SIZE 4096
 
