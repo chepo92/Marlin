@@ -39,7 +39,6 @@ namespace Language_vi {
   PROGMEM Language_Str MSG_MEDIA_ABORTING                  = _UxGT("Đang hủy bỏ...");
   PROGMEM Language_Str MSG_MEDIA_INSERTED                  = _UxGT("Phương tiện được cắm vào");             // Media inserted
   PROGMEM Language_Str MSG_MEDIA_REMOVED                   = _UxGT("Phương tiện được rút ra");
-  PROGMEM Language_Str MSG_MEDIA_RELEASED                  = _UxGT("Phương tiện đã phát hành");
   PROGMEM Language_Str MSG_MEDIA_WAITING                   = _UxGT("Chờ đợi phương tiện");
   PROGMEM Language_Str MSG_MEDIA_READ_ERROR                = _UxGT("Lỗi đọc phương tiện");
   PROGMEM Language_Str MSG_MEDIA_USB_REMOVED               = _UxGT("USB được rút ra");
@@ -300,8 +299,8 @@ namespace Language_vi {
   PROGMEM Language_Str MSG_FILAMENT_SWAP_LENGTH            = _UxGT("Khoảng Cách Rút");                      // Retract Distance
   PROGMEM Language_Str MSG_TOOL_CHANGE                     = _UxGT("Thay Đổi Công Cụ");                     // Tool Change
   PROGMEM Language_Str MSG_TOOL_CHANGE_ZLIFT               = _UxGT("Đưa Lên Z");                            // Z Raise
-  PROGMEM Language_Str MSG_SINGLENOZZLE_PRIME_SPD          = _UxGT("Tốc Độ Tuôn Ra");                       // Prime Speed
-  PROGMEM Language_Str MSG_SINGLENOZZLE_RETRACT_SPD        = _UxGT("Tốc Độ Rút Lại");                       // Retract Speed
+  PROGMEM Language_Str MSG_SINGLENOZZLE_PRIME_SPEED        = _UxGT("Tốc Độ Tuôn Ra");                       // Prime Speed
+  PROGMEM Language_Str MSG_SINGLENOZZLE_RETRACT_SPEED      = _UxGT("Tốc Độ Rút Lại");                       // Retract Speed
   PROGMEM Language_Str MSG_FILAMENTCHANGE                  = _UxGT("Thay dây nhựa");                        // change filament
   PROGMEM Language_Str MSG_FILAMENTCHANGE_E                = _UxGT("Thay dây nhựa *");                      // change filament
   PROGMEM Language_Str MSG_FILAMENTLOAD                    = _UxGT("Nạp dây nhựa");                         // load filament
@@ -336,7 +335,6 @@ namespace Language_vi {
   PROGMEM Language_Str MSG_ERR_MINTEMP                     = _UxGT("Điều sai: nhiệt độ tối thiểu");         // Err: MINTEMP
   PROGMEM Language_Str MSG_ERR_MAXTEMP_BED                 = _UxGT("Điều sai: nhiệt độ bàn tối đa");        // Err: MAXTEMP BED
   PROGMEM Language_Str MSG_ERR_MINTEMP_BED                 = _UxGT("Điều sai: nhiệt độ bàn tối thiểu");     // Err: MINTEMP BED
-  PROGMEM Language_Str MSG_ERR_Z_HOMING                    = _UxGT("Về nhà XY Trước");                      // Home XY First
   PROGMEM Language_Str MSG_HALTED                          = _UxGT("MÁY IN ĐÃ DỪNG LẠI");                   // PRINTER HALTED
   PROGMEM Language_Str MSG_PLEASE_RESET                    = _UxGT("Xin bặt lại");                          // Please reset
   PROGMEM Language_Str MSG_SHORT_DAY                       = _UxGT("n");                                    // d - ngày - One character only

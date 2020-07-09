@@ -46,7 +46,6 @@ namespace Language_jp_kana {
   PROGMEM Language_Str MSG_MEDIA_INSERTED                  = _UxGT("メディアガソウニュウサレマシタ");        // "Card inserted"
   PROGMEM Language_Str MSG_MEDIA_REMOVED                   = _UxGT("メディアガアリマセン");               // "Card removed"
   PROGMEM Language_Str MSG_RELEASE_MEDIA                   = _UxGT("メディアノトリダシ");
-  PROGMEM Language_Str MSG_MEDIA_RELEASED                  = _UxGT("メディアガアリマセン");               // "Card removed"
   PROGMEM Language_Str MSG_LCD_ENDSTOPS                    = _UxGT("エンドストップ");                  // "Endstops" // Max length 8 characters
   PROGMEM Language_Str MSG_MAIN                            = _UxGT("メイン");                       // "Main"
   PROGMEM Language_Str MSG_AUTOSTART                       = _UxGT("ジドウカイシ");                   // "Autostart"
@@ -184,7 +183,6 @@ namespace Language_jp_kana {
   PROGMEM Language_Str MSG_ERR_MINTEMP                     = _UxGT("エラー:サイテイオンミマン");          // "Err: MINTEMP"
   PROGMEM Language_Str MSG_ERR_MAXTEMP_BED                 = _UxGT("エラー:ベッド サイコウオンチョウカ");    // "Err: MAXTEMP BED"
   PROGMEM Language_Str MSG_ERR_MINTEMP_BED                 = _UxGT("エラー:ベッド サイテイオンミマン");     // "Err: MINTEMP BED"
-  PROGMEM Language_Str MSG_ERR_Z_HOMING                    = _UxGT("サキニ XY ヲフッキサセテクダサイ");     // "Home XY first"
   PROGMEM Language_Str MSG_HALTED                          = _UxGT("プリンターハテイシシマシタ");         // "PRINTER HALTED"
   PROGMEM Language_Str MSG_PLEASE_RESET                    = _UxGT("リセットシテクダサイ");              // "Please reset"
   PROGMEM Language_Str MSG_SHORT_DAY                       = _UxGT("d");                          // One character only
