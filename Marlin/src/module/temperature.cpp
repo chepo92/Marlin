@@ -1011,16 +1011,17 @@ void Temperature::manage_heater() {
 
   updateTemperaturesFromRawValues(); // also resets the watchdog
 
-  #if ENABLED(HEATER_0_USES_MAX6675)
-    if (temp_hotend[0].celsius > _MIN(HEATER_0_MAXTEMP, HEATER_0_MAX6675_TMAX - 1.0)) max_temp_error(H_E0);
-    if (temp_hotend[0].celsius < _MAX(HEATER_0_MINTEMP, HEATER_0_MAX6675_TMIN + .01)) min_temp_error(H_E0);
+  #if DISABLED(IGNORE_THERMOCOUPLE_ERRORS)
+      #if ENABLED(HEATER_0_USES_MAX6675)
+        if (temp_hotend[0].celsius > _MIN(HEATER_0_MAXTEMP, HEATER_0_MAX6675_TMAX - 1.0)) max_temp_error(H_E0);
+        if (temp_hotend[0].celsius < _MAX(HEATER_0_MINTEMP, HEATER_0_MAX6675_TMIN + .01)) min_temp_error(H_E0);
+      #endif
+    
+    #if ENABLED(HEATER_1_USES_MAX6675)
+      if (temp_hotend[1].celsius > _MIN(HEATER_1_MAXTEMP, HEATER_1_MAX6675_TMAX - 1.0)) max_temp_error(H_E1);
+      if (temp_hotend[1].celsius < _MAX(HEATER_1_MINTEMP, HEATER_1_MAX6675_TMIN + .01)) min_temp_error(H_E1);
+    #endif
   #endif
-
-  #if ENABLED(HEATER_1_USES_MAX6675)
-    if (temp_hotend[1].celsius > _MIN(HEATER_1_MAXTEMP, HEATER_1_MAX6675_TMAX - 1.0)) max_temp_error(H_E1);
-    if (temp_hotend[1].celsius < _MAX(HEATER_1_MINTEMP, HEATER_1_MAX6675_TMIN + .01)) min_temp_error(H_E1);
-  #endif
-
   millis_t ms = millis();
 
   #if HAS_HOTEND
@@ -2180,7 +2181,8 @@ void Temperature::disable_all_heaters() {
 
     WRITE_MAX6675(HIGH); // disable TT_MAX6675
 
-    if (max6675_temp & MAX6675_ERROR_MASK) {
+
+    if (max6675_temp & MAX6675_ERROR_MASK & DISABLED(IGNORE_THERMOCOUPLE_ERRORS) ) {
       max6675_errors[hindex] += 1;
       if (max6675_errors[hindex] > THERMOCOUPLE_MAX_ERRORS) {
         SERIAL_ERROR_START();
@@ -2216,6 +2218,7 @@ void Temperature::disable_all_heaters() {
       max6675_temp >>= MAX6675_DISCARD_BITS;
       max6675_errors[hindex] = 0;
     }
+    
 
     #if ENABLED(MAX6675_IS_MAX31855)
       if (max6675_temp & 0x00002000) max6675_temp |= 0xFFFFC000; // Support negative temperature

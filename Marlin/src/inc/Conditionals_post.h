@@ -424,7 +424,7 @@
     #define HEATER_0_MAX6675_TMAX 1800
   #else
     #define HEATER_0_MAX6675_TMIN    0
-    #define HEATER_0_MAX6675_TMAX 1024
+    #define HEATER_0_MAX6675_TMAX 10240
   #endif
   #if TEMP_SENSOR_0 == -5
     #define MAX6675_IS_MAX31865
@@ -453,7 +453,7 @@
     #define HEATER_1_MAX6675_TMAX 1800
   #else
     #define HEATER_1_MAX6675_TMIN    0
-    #define HEATER_1_MAX6675_TMAX 1024
+    #define HEATER_1_MAX6675_TMAX 10240
   #endif
   #if TEMP_SENSOR_1 != TEMP_SENSOR_0
     #if   TEMP_SENSOR_1 == -5
