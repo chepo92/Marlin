@@ -38,7 +38,7 @@
 #if ENABLED(SPINDLE_LASER_PWM)
   #if SPINDLE_LASER_PWM_PIN == 4 || WITHIN(SPINDLE_LASER_PWM_PIN, 11, 13)
     #error "Counter/Timer for SPINDLE_LASER_PWM_PIN is used by a system interrupt."
-  #elif NUM_SERVOS > 0 && (WITHIN(SPINDLE_LASER_PWM_PIN, 2, 3) || SPINDLE_LASER_PWM_PIN == 5)
+  #elif (NUM_SERVOS >= 1 && (SPINDLE_LASER_PWM_PIN == SERVO0_PIN )) || (NUM_SERVOS >= 2 && (SPINDLE_LASER_PWM_PIN == SERVO1_PIN )) || (NUM_SERVOS >= 3 && (SPINDLE_LASER_PWM_PIN == SERVO2_PIN )) || (NUM_SERVOS >= 4 && (SPINDLE_LASER_PWM_PIN == SERVO3_PIN ))  // #elif NUM_SERVOS > 0 && (WITHIN(SPINDLE_LASER_PWM_PIN, 2, 3) || SPINDLE_LASER_PWM_PIN == 5)
     #error "Counter/Timer for SPINDLE_LASER_PWM_PIN is used by the servo system."
   #endif
 #elif defined(SPINDLE_LASER_FREQUENCY)

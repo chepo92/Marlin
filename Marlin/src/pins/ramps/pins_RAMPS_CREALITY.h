@@ -34,9 +34,9 @@
 // Power outputs EFBF or EFBE
 #define MOSFET_D_PIN                           7
 
-#define FIL_RUNOUT_PIN                         2
+#define FIL_RUNOUT_PIN                        15
 #if NUM_RUNOUT_SENSORS > 1
-  #define FIL_RUNOUT2_PIN                     15  // Creality CR-X can use dual runout sensors
+  #define FIL_RUNOUT2_PIN                     66  // Creality CR-X can use dual runout sensors
 #endif
 
 #ifndef SD_DETECT_PIN

@@ -59,7 +59,7 @@
 // Say which 16 bit timers can be used and in what order
 #if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
   //#define _useTimer1
-  #define _useTimer3
+  //#define _useTimer3
   #define _useTimer4
   #if !HAS_MOTOR_CURRENT_PWM
     #define _useTimer5 // Timer 5 is used for motor current PWM and can't be used for servos.
