@@ -238,9 +238,8 @@ public:
         inline_power(cpwr_to_upwr(SPEED_POWER_STARTUP));
       else {
         isReady = false;
-        //unitPower = menuPower = 0;
-        planner.laser_inline.status.isPlanned = false;
-        planner.laser_inline.status.isEnabled = false;
+        unitPower = menuPower = 0;
+        planner.laser_inline.status.isPlanned = false;        
         TERN(SPINDLE_LASER_PWM, inline_ocr_power, inline_power)(0);
       }
     }

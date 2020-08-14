@@ -1832,7 +1832,7 @@ bool Planner::_populate_block(block_t * const block, bool split_move,
   #if ENABLED(LASER_POWER_INLINE)
     laser_inline.status.isPlanned = true;
     block->laser.status = laser_inline.status;
-    block->laser.power = laser_inline.status.isEnabled ? laser_inline.power : cutter.power;
+    block->laser.power = laser_inline.power;
   #endif
 
   // Number of steps for each axis

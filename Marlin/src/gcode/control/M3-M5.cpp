@@ -95,8 +95,7 @@ void GcodeSuite::M3_M4(const bool is_M4) {
       return;
     }
     // Non-inline, standard case
-    cutter.set_inline_enabled(false);
-    //cutter.inline_disable(); // Prevent future blocks re-setting the power
+    cutter.inline_disable(); // Prevent future blocks re-setting the power
   #endif
 
   planner.synchronize();   // Wait for previous movement commands (G0/G0/G2/G3) to complete before changing power
