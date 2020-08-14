@@ -241,7 +241,7 @@ public:
         //unitPower = menuPower = 0;
         planner.laser_inline.status.isPlanned = false;
         planner.laser_inline.status.isEnabled = false;
-        TERN(SPINDLE_LASER_PWM, inline_ocr_power, inline_power)(0);
+        //TERN(SPINDLE_LASER_PWM, inline_ocr_power, inline_power)(0);
       }
     }
 
