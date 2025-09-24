@@ -1129,7 +1129,7 @@
 
   // TPARA Workspace offset relative to the tower (position of workspace origin relative to robot Tower origin )
   // This needs to be reasonably accurate as it defines the printbed position in the TPARA space.
-  #define TPARA_OFFSET_X    100.0     // (mm)  
+  #define TPARA_OFFSET_X    127.0     // (mm)  Thus it coincides with the minimum radius, and W(0,0,0) is reachable 
   #define TPARA_OFFSET_Y      0.0     // (mm)  
   #define TPARA_OFFSET_Z      0.0     // (mm)
 
