@@ -390,7 +390,7 @@ xyz_pos_t apply_T_W_offset(const xyz_pos_t &rpose) {
 
     delta.set(DEGREES(THETA), DEGREES(PHI), DEGREES(PSI));
     
-    // SERIAL_ECHOLNPGM(" TPARA IK raw(x,y,z) ", raw.x, ",", raw.y, ",", raw.z, " Robot pose(x,y,z) ", tpos.x, ",", tpos.y, ",", tpos.z + robot_shoulder_offset.z, " Rho^2=", RHO_2, " Theta=", THETA*RAD_TO_DEG, " Phi=", PHI*RAD_TO_DEG, " Psi=", PSI*RAD_TO_DEG, " Gamma=", GAMMA*RAD_TO_DEG);
+    SERIAL_ECHOLNPGM(" TPARA IK raw(x,y,z) ", raw.x, ",", raw.y, ",", raw.z, " Robot pose(x,y,z) ", tpos.x, ",", tpos.y, ",", tpos.z + robot_shoulder_offset.z, " Rho^2=", RHO_2, " Theta=", THETA*RAD_TO_DEG, " Phi=", PHI*RAD_TO_DEG, " Psi=", PSI*RAD_TO_DEG, " Gamma=", GAMMA*RAD_TO_DEG);
  
   }
 
