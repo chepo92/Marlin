@@ -207,6 +207,15 @@
   #include "stepper.h"
 #endif
 
+
+#define TEMP_SENSOR_IS_ADS(n, M) (ENABLED(TEMP_SENSOR_##n##_IS_ADS##M) || (ENABLED(TEMP_SENSOR_REDUNDANT_IS_ADS##M) && REDUNDANT_TEMP_MATCH(SOURCE, E##n)))
+
+// ADS1118
+#if HAS_ADS1118
+  #include "../libs/adc/adc_ads1118.h"
+#endif
+
+
 #if ENABLED(FILAMENT_WIDTH_SENSOR)
   #include "../feature/filwidth.h"
 #endif
@@ -388,6 +397,10 @@ PGMSTR(str_t_heating_failed, STR_T_HEATING_FAILED);
   #endif // HAS_PREHEAT
 
 #endif // HAS_HOTEND
+
+#if ENABLED(AUTOTEMP)
+  autotemp_t Temperature::autotemp;   // Initialized by settings.load
+#endif
 
 #if HAS_TEMP_REDUNDANT
   redundant_info_t Temperature::temp_redundant;
@@ -1122,7 +1135,7 @@ void Temperature::factory_reset() {
 
       if (ELAPSED(curr_time_ms, next_test_ms)) {
         if (current_temp >= ambient_temp) {
-          ambient_temp = (ambient_temp + current_temp) / 2.0f;
+          ambient_temp = (ambient_temp + current_temp) * 0.5f;
           break;
         }
         ambient_temp = current_temp;
@@ -1155,7 +1168,7 @@ void Temperature::factory_reset() {
     hotend.target = 200.0f;   // So M105 looks nice
     hotend.soft_pwm_amount = (MPC_MAX) >> 1;
 
-    // Initialise rate of change to to steady state at current time
+    // Initialise rate of change to steady state at current time
     temp_samples[0] = temp_samples[1] = temp_samples[2] = current_temp;
     time_fastest = rate_fastest = 0;
 
@@ -1362,7 +1375,7 @@ void Temperature::factory_reset() {
     const float t1 = tuner.get_sample_1_temp(),
                 t2 = tuner.get_sample_2_temp(),
                 t3 = tuner.get_sample_3_temp();
-    float asymp_temp = (t2 * t2 - t1 * t3) / (2 * t2 - t1 - t3),
+    float asymp_temp = (sq(t2) - t1 * t3) / (2 * t2 - t1 - t3),
           block_responsiveness = -log((t2 - asymp_temp) / (t1 - asymp_temp)) / tuner.get_sample_interval();
 
     #if ENABLED(MPC_AUTOTUNE_DEBUG)
@@ -1884,7 +1897,7 @@ void Temperature::mintemp_error(const heater_id_t heater_id OPTARG(ERR_INCLUDE_T
       float power = 0.0;
       if (hotend.target != 0 && !is_idling) {
         // Plan power level to get to target temperature in 2 seconds
-        power = (hotend.target - hotend.modeled_block_temp) * mpc.block_heat_capacity / 2.0f;
+        power = (hotend.target - hotend.modeled_block_temp) * mpc.block_heat_capacity * 0.5f;
         power -= (hotend.modeled_ambient_temp - hotend.modeled_block_temp) * ambient_xfer_coeff;
       }
 
@@ -2602,7 +2615,7 @@ void Temperature::task() {
 #if ANY_THERMISTOR_IS(-1)
   // For a 5V input the AD595 returns a value scaled with 10mV per °C. (Minimum input voltage is 5V.)
   static constexpr celsius_float_t temp_ad595(const raw_adc_t raw) {
-    return raw * (float(ADC_VREF_MV) / 10.0f) / float(HAL_ADC_RANGE) / (OVERSAMPLENR)
+    return raw * (float(ADC_VREF_MV) * 0.1f) / float(HAL_ADC_RANGE) / (OVERSAMPLENR)
                * (TEMP_SENSOR_AD595_GAIN) + (TEMP_SENSOR_AD595_OFFSET);
   }
 #endif
@@ -2615,10 +2628,37 @@ void Temperature::task() {
   }
 #endif
 
+
+#if ANY_THERMISTOR_IS(-18)
+
+// Conversion for ADS1118 in differential mode (K-type)
+// Each LSB bit ≈ 62.5 µV → ~1.5 °C (no calibration).
+// Adjustable with GAIN and OFFSET from Configuration_adv.h
+
+  static constexpr celsius_float_t temp_ads1118(const uint8_t e) {
+    celsius_float_t temp = 0;
+    switch (e) {
+      case 0:
+        temp = thck_0.calcTempCelsius();
+        //SERIAL_ECHO("temp ads1118: "); SERIAL_ECHOLN(temp);
+        break;
+      case 1:
+        temp = thck_1.calcTempCelsius();
+        break;
+      default:
+        temp = -14.0f; // Fallback to error temperature
+        break;
+    }
+    return temp;
+  }
+
+#endif // ANY_THERMISTOR_IS(-18)
+
 #if HAS_HOTEND
   // Derived from RepRap FiveD extruder::getTemperature()
   // For hot end temperature measurement.
   celsius_float_t Temperature::analog_to_celsius_hotend(const raw_adc_t raw, const uint8_t e) {
+    //SERIAL_ECHOLN(e);
     if (e >= HOTENDS) {
       SERIAL_ERROR_START();
       SERIAL_ECHO(e);
@@ -2644,6 +2684,8 @@ void Temperature::task() {
           return temp_ad595(raw);
         #elif TEMP_SENSOR_0_IS_AD8495
           return temp_ad8495(raw);
+        #elif TEMP_SENSOR_0_IS_ADS1118
+          return temp_ads1118(e);
         #else
           break;
         #endif
@@ -2663,6 +2705,8 @@ void Temperature::task() {
           return temp_ad595(raw);
         #elif TEMP_SENSOR_1_IS_AD8495
           return temp_ad8495(raw);
+        #elif TEMP_SENSOR_1_IS_ADS1118
+          return temp_ads1118(e);
         #else
           break;
         #endif
@@ -2914,6 +2958,31 @@ void Temperature::updateTemperaturesFromRawValues() {
     temp_bed.setraw(read_max_tc_bed());
   #endif
 
+  // Read ADC ADS1118
+  // Note: For ADS1118, we don't call setraw() because read_ads1118() returns int16_t
+  // (differential measurement can be negative) but raw_adc_t is uint16_t.
+  // Instead, the ThermocoupleK object (thck_0/thck_1) handles the conversion
+  // internally, and analog_to_celsius_hotend() will retrieve the computed
+  // temperature via thck_0.getThot(). This avoids type overflow and keeps
+  // the conversion logic centralized and ISR-light.
+  #if TEMP_SENSOR_IS_ADS(0, 1118)
+    #warning "ADS1118 is selected for hotend 0"
+    temp_hotend[0].setraw(READ_ADS(0));
+    //SERIAL_ECHOPGM("ADS1118 Tcold=");
+    //SERIAL_ECHO(thck_0.getTcold());
+    //SERIAL_ECHOPGM(" Thot=");
+    //SERIAL_ECHOLN(thck_0.getThot());
+  #endif
+
+  #if TEMP_SENSOR_IS_ADS(1, 1118)
+    #warning "ADS1118 is selected for hotend 1"
+    temp_hotend[1].setraw(READ_ADS(1));
+    //SERIAL_ECHOPGM("ADS1118 Tcold=");
+    //SERIAL_ECHO(thck_1.getTcold());
+    //SERIAL_ECHOPGM(" Thot=");
+    //SERIAL_ECHOLN(thck_1.getThot());
+  #endif
+
   #if HAS_HOTEND
     HOTEND_LOOP() temp_hotend[e].celsius = analog_to_celsius_hotend(temp_hotend[e].getraw(), e);
   #endif
@@ -2930,7 +2999,8 @@ void Temperature::updateTemperaturesFromRawValues() {
   TERN_(HAS_POWER_MONITOR,     power_monitor.capture_values());
 
   #if HAS_HOTEND
-    #define _TEMPDIR(N) TEMP_SENSOR_IS_ANY_MAX_TC(N) ? 0 : TEMPDIR(N),
+
+    #define _TEMPDIR(N) (TEMP_SENSOR_IS_ANY_MAX_TC(N) || TEMP_SENSOR_IS_ADS(N,1118)) ? 0 : TEMPDIR(N),
     static constexpr int8_t temp_dir[HOTENDS] = { REPEAT(HOTENDS, _TEMPDIR) };
 
     HOTEND_LOOP() {
@@ -3013,6 +3083,30 @@ void Temperature::updateTemperaturesFromRawValues() {
 void Temperature::init() {
 
   TERN_(PROBING_HEATERS_OFF, paused_for_probing = false);
+
+  //#define TEMP_0_CS_PIN    79  // E6
+  //#define TEMP_0_SCK_PIN   78  // E2
+  //#define TEMP_0_MISO_PIN  80  // E7
+  //#define TEMP_0_MOSI_PIN  84  // H2
+
+  #if HAS_ADS1118
+    ads1118.init(TEMP_0_CS_PIN, TEMP_0_MOSI_PIN, TEMP_0_MISO_PIN, TEMP_0_SCK_PIN); // Initialize the ADS1118, global instance
+    ads1118.readConfig();
+  #endif
+
+  // ADS TC related macros
+  #if TEMP_SENSOR_IS_ADS(0, 1118)
+    #warning "ADS1118 is selected for temp 0"
+    thck_0.init();
+    //SERIAL_ECHOLNPGM("ADS1118 start initial conversion for Tcold...");
+    thck_0.setTcold (ads1118.readInternalTemp());
+
+    ads1118.current_config  = ads1118.config_ADC_SS_TEMP;
+    ads1118.previous_config = ads1118.current_config;
+    //SERIAL_ECHOPGM("ADS1118 Tcold: ");
+    //SERIAL_ECHOLN(thck_0.getTcold());
+    //ads1118.readConfig();
+  #endif
 
   // Init (and disable) SPI thermocouples
   #if TEMP_SENSOR_IS_ANY_MAX_TC(0) && PIN_EXISTS(TEMP_0_CS)
@@ -3552,7 +3646,7 @@ void Temperature::init() {
 void Temperature::disable_all_heaters() {
 
   // Disable autotemp, unpause and reset everything
-  TERN_(AUTOTEMP, planner.autotemp.enabled = false);
+  TERN_(AUTOTEMP, autotemp.enabled = false);
   TERN_(PROBING_HEATERS_OFF, pause_heaters(false));
 
   #if HAS_HOTEND
@@ -3637,7 +3731,7 @@ void Temperature::disable_all_heaters() {
       singlenozzle_temp[old_tool] = temp_hotend[0].target;
       if (singlenozzle_temp[new_tool] && singlenozzle_temp[new_tool] != singlenozzle_temp[old_tool]) {
         setTargetHotend(singlenozzle_temp[new_tool], 0);
-        TERN_(AUTOTEMP, planner.autotemp_update());
+        TERN_(AUTOTEMP, autotemp_update());
         set_heating_message(0);
         (void)wait_for_hotend(0, false);  // Wait for heating or cooling
       }
@@ -3810,7 +3904,7 @@ void Temperature::disable_all_heaters() {
     return max_tc_temp;
   }
 
-#endif // HAS_MAX_TC
+#endif // TEMP_SENSOR_IS_MAX_TC(0) || TEMP_SENSOR_IS_MAX_TC(1) || TEMP_SENSOR_IS_MAX_TC(2)
 
 #if TEMP_SENSOR_IS_MAX_TC(BED)
   /**
@@ -3929,6 +4023,111 @@ void Temperature::disable_all_heaters() {
   }
 
 #endif // TEMP_SENSOR_IS_MAX_TC(BED)
+
+#if HAS_ADS1118
+  /**
+   * @brief Read ADS Thermocouple temperature.
+   *
+   * Reads the thermocouple board via HW or SW SPI, using a library (LIB_USR_x) or raw SPI reads.
+   * Doesn't strictly return a temperature; returns an "ADC Value" (i.e. raw register content).
+   * Currently only supports channel 0 (single extruder)
+   *
+   * @param  hindex  the hotend we're referencing (different channel in ADS1118)
+   * @return         integer representing the board's buffer, to be converted later if needed
+   */
+raw_adc_t Temperature::read_ads1118(const uint8_t hindex/*=0*/) {
+  #define ADS1118_HEAT_INTERVAL 250UL  // 250 ms
+
+  //static raw_adc_t ads1118_coldJ_temp_current[2] = { 0, 0 };
+  //static raw_adc_t ads1118_hotJ_temp_current[2] = { 0, 0 };
+
+  static raw_adc_t ads1118_temp_previous[2] = { 0, 0 };
+  static uint8_t ads1118_errors[2] = { 0, 0 };
+  static millis_t next_ads1118_ms[2] = { 0, 0 };
+
+  static raw_adc_t ads_val = TEMP_SENSOR_0_ADS_TMAX;
+
+  static uint8_t sampleCount;
+
+  //static millis_t lastmillis;
+
+  const millis_t ms = millis();
+  //SERIAL_ECHOPGM("ADS1118 elapsed: "); SERIAL_ECHOLN(ms- lastmillis);
+  //lastmillis = ms;
+  if (PENDING(ms, next_ads1118_ms[hindex]) )  // || !ads1118.checkDataReady()
+    return ads1118_temp_previous[hindex];  // return cached value
+
+  next_ads1118_ms[hindex] = ms + ADS1118_HEAT_INTERVAL;
+
+  // To do: If there are more hotends enabled, cycle through different channels
+  int16_t raw;
+
+  if (sampleCount < 1)
+  {
+    ads1118.previous_config = ads1118.current_config;
+    ads1118.current_config = ads1118.config_ADC_SS_TEMP;
+    sampleCount++;
+  }
+  else if (hindex == 0)
+  {
+    ads1118.previous_config = ads1118.current_config;
+    ads1118.current_config = ads1118.config_ADC_SS_CH0;
+    sampleCount = 0;
+  } else if (hindex == 1){
+    ads1118.previous_config = ads1118.current_config;
+    ads1118.current_config = ads1118.config_ADC_SS_CH1;
+    sampleCount = 0;
+  }
+
+  raw = (int16_t) ads1118.readWriteData(ads1118.current_config);
+
+  if (ads1118.previous_config == ads1118.config_ADC_SS_TEMP)
+  {
+    //thck_0.setTcold(ads1118.convertInternalTemp(raw));
+    thck_0.setRawCold(raw);
+    //SERIAL_ECHOPGM("Last read Raw cold: "); SERIAL_ECHOLN(raw);
+    //SERIAL_ECHOPGM("TCold "); SERIAL_ECHOLN(thck_0.getTcold());
+
+  }
+  else if (ads1118.previous_config  == ads1118.config_ADC_SS_CH0)
+  {
+    //ads1118_hotJ_temp_current[hindex] = raw;
+    //thck_0.setThot(thck_0.tempReadtoCelsius(raw));
+    thck_0.setRawHot(raw);
+    //SERIAL_ECHOPGM("Last read Raw hot: "); SERIAL_ECHOLN(raw);
+    //SERIAL_ECHOPGM("ADS1118 THot "); SERIAL_ECHOLN(thck_0.getThot());
+  }
+
+
+  // SERIAL_ECHOPGM("ADS1118 State:Read "); SERIAL_ECHOLN(curr_state); SERIAL_ECHOPGM(":"); SERIAL_ECHOLN(raw);
+
+  // Handle read error or disconnection : raw = 0x7FFF or 0x8000 (-32768)
+  if (raw == 0x7FFF || raw == -32768) {
+    ads1118_errors[hindex]++;
+    if (ads1118_errors[hindex] > 3) {
+      SERIAL_ERROR_START();
+      SERIAL_ECHOLNPGM("ADS1118 Fault: Conversion error!");
+      ads_val = (raw_adc_t)(TEMP_SENSOR_0_ADS_TMAX << 4); // force error
+    }
+  }
+  else if (raw < 32767){
+    ads1118_errors[hindex] = 0; // reset errors if ok
+    ads_val = (raw_adc_t) (((int16_t)raw) + 32768); // raw shift to unsigned int;
+  } else { // if we add 32767 to raw it will overflow
+    ads1118_errors[hindex] = 0; // reset errors if ok
+    SERIAL_ECHOLNPGM("ADS1118 Warn: Cannot shift adc read from signed to unsigned!");
+    ads_val = raw_adc_t(raw); // as is
+  }
+  //ads_val = raw_adc_t(3000); // raw;
+
+  ads1118_temp_previous[hindex] = ads_val; // cache value
+  //SERIAL_ECHOPGM("ADS1118 ads_val: "); SERIAL_ECHOLN(ads_val);
+  return ads_val;  // return the raw value, it will not be used directly for conversion but for errors, (raw values are stored in thermocouple class)
+}
+#endif // HAS_ADS1118
+
+
+
 
 /**
  * Update raw temperatures
@@ -4778,7 +4977,7 @@ void Temperature::isr() {
       OPTARG(G26_CLICK_CAN_CANCEL, const bool click_to_cancel/*=false*/)
     ) {
       #if ENABLED(AUTOTEMP)
-        REMEMBER(1, planner.autotemp.enabled, false);
+        REMEMBER(1, autotemp.enabled, false);
       #endif
 
       #if TEMP_RESIDENCY_TIME > 0
@@ -4910,6 +5109,58 @@ void Temperature::isr() {
     #endif
 
   #endif // HAS_TEMP_HOTEND
+
+  #if ENABLED(AUTOTEMP)
+
+    void Temperature::_autotemp_update_from_hotend() {
+      TERN_(AUTOTEMP_PROPORTIONAL, autotemp.update(degTargetHotend(active_extruder)));
+    }
+
+    /**
+     * Called after changing tools to:
+     *  - Reset or re-apply the default proportional autotemp factor.
+     *  - Enable autotemp if the factor is non-zero.
+     */
+    void Temperature::autotemp_update() {
+      _autotemp_update_from_hotend();
+      autotemp.cfg.factor = TERN0(AUTOTEMP_PROPORTIONAL, AUTOTEMP_FACTOR_P);
+      autotemp.enabled = autotemp.cfg.factor != 0;
+    }
+
+    /**
+     * Called by the M104/M109 commands after setting Hotend Temperature
+     */
+    void Temperature::autotemp_M104_M109() {
+      _autotemp_update_from_hotend();
+
+      if (parser.seenval('S')) autotemp.cfg.min = parser.value_celsius();
+      if (parser.seenval('B')) autotemp.cfg.max = parser.value_celsius();
+
+      // When AUTOTEMP_PROPORTIONAL is enabled, F0 disables autotemp.
+      // Normally, leaving off F also disables autotemp.
+      autotemp.cfg.factor = parser.seen('F') ? parser.value_float() : TERN0(AUTOTEMP_PROPORTIONAL, AUTOTEMP_FACTOR_P);
+      autotemp.enabled = autotemp.cfg.factor != 0;
+    }
+
+    /**
+     * Called every so often to adjust the hotend target temperature
+     * based on the extrusion speed, which is calculated from the blocks
+     * currently in the planner.
+     */
+    void Temperature::autotemp_task() {
+      if (!autotemp.enabled) return;
+      if (degTargetHotend(active_extruder) < autotemp.cfg.min - 2) return; // Below the min?
+
+      // Get a highest target proportion greater than zero
+      float high = planner.get_high_e_speed();
+
+      // Calculate a new target, with weighted correction for a drop
+      float t = autotemp.calculate(high);
+
+      _setTargetHotend(t, active_extruder);
+    }
+
+  #endif // AUTOTEMP
 
   #if HAS_HEATED_BED
 
