@@ -1253,6 +1253,10 @@ void setup() {
     JTAGSWD_RESET();
   #endif
 
+  #if ENABLED(DISABLE_JTAG) && !defined(JTAG_DISABLE)
+    #warning "DISABLE_JTAG is enabled, but JTAG_DISABLE is not defined by the core"
+  #endif    
+
   // Disable any hardware debug to free up pins for IO
   #if ENABLED(DISABLE_DEBUG) && defined(JTAGSWD_DISABLE)
     delay(10);
