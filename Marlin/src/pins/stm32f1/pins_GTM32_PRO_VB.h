@@ -37,20 +37,20 @@
 
 #define BOARD_NO_NATIVE_USB
 
-//#define DISABLE_DEBUG
+// #define DISABLE_DEBUG
 
 //
 // It is required to disable JTAG function because its pins are
 // used as GPIO to drive the Y axis stepper.
 // DO NOT ENABLE!
 //
-#define DISABLE_JTAG
+//#define DISABLE_JTAG
 
 //
 // If you don't need the SWDIO functionality (any more), you may
 // disable SWD here to regain PA13/PA14 pins for other use.
 //
-//#define DISABLE_JTAGSWD
+ #define DISABLE_JTAGSWD
 
 // Ignore temp readings during development.
 //#define BOGUS_TEMPERATURE_GRACE_PERIOD    2000
