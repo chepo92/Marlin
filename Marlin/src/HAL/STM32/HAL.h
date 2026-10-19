@@ -89,11 +89,41 @@ typedef libServo hal_servo_t;
 #define GET_PIN_MAP_INDEX(pin) pin
 #define PARSED_PIN_INDEX(code, dval) parser.intval(code, dval)
 
-#ifdef STM32F1xx
-  #define JTAG_DISABLE() AFIO_DBGAFR_CONFIG(AFIO_MAPR_SWJ_CFG_JTAGDISABLE)
-  #define JTAGSWD_DISABLE() AFIO_DBGAFR_CONFIG(AFIO_MAPR_SWJ_CFG_DISABLE)
-  #define JTAGSWD_RESET() AFIO_DBGAFR_CONFIG(AFIO_MAPR_SWJ_CFG_RESET); // Reset: FULL SWD+JTAG
+// #ifdef STM32F1xx
+//   #define JTAG_DISABLE() AFIO_DBGAFR_CONFIG(AFIO_MAPR_SWJ_CFG_JTAGDISABLE)
+//   #define JTAGSWD_DISABLE() AFIO_DBGAFR_CONFIG(AFIO_MAPR_SWJ_CFG_DISABLE)
+//   #define JTAGSWD_RESET() AFIO_DBGAFR_CONFIG(AFIO_MAPR_SWJ_CFG_RESET); // Reset: FULL SWD+JTAG
+// #endif
+
+// ============================================================================
+// F1 Hardware Patch: Fix for missing AFIO Clock during early JTAG/SWD disable
+// ============================================================================
+#if defined(STM32F1xx)
+  // #pragma message "Marlin HAL: F1 chip detected inside modern STM32 environment."
+  // #pragma message "Marlin HAL: Safe-patching JTAG/SWD macros to enforce AFIO peripheral clock."
+
+  // 1. Disables JTAG but keeps SWD active (Frees PA15, PB3, PB4)
+  #undef JTAG_DISABLE
+  #define JTAG_DISABLE() do { \
+    __HAL_RCC_AFIO_CLK_ENABLE(); \
+    AFIO_DBGAFR_CONFIG(AFIO_MAPR_SWJ_CFG_JTAGDISABLE); \
+  } while(0)
+
+  // 2. Disables BOTH JTAG and SWD completely (Frees PA13, PA14, PA15, PB3, PB4)
+  #undef JTAGSWD_DISABLE
+  #define JTAGSWD_DISABLE() do { \
+    __HAL_RCC_AFIO_CLK_ENABLE(); \
+    AFIO_DBGAFR_CONFIG(AFIO_MAPR_SWJ_CFG_DISABLE); \
+  } while(0)
+
+  // 3. Resets to default state (Full SWD + JTAG enabled)
+  #undef JTAGSWD_RESET
+  #define JTAGSWD_RESET() do { \
+    __HAL_RCC_AFIO_CLK_ENABLE(); \
+    AFIO_DBGAFR_CONFIG(AFIO_MAPR_SWJ_CFG_RESET); \
+  } while(0)
 #endif
+
 
 #ifndef PLATFORM_M997_SUPPORT
   #define PLATFORM_M997_SUPPORT
