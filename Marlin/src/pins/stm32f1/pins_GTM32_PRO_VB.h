@@ -219,6 +219,9 @@
   #define SD_MOSI_PIN                       PD2
   #define SD_MISO_PIN                       PC8
   #define SD_DETECT_PIN                     PC7
+
+  #define FORCE_SOFT_SPI
+  #define SOFTWARE_SPI
 #else
   //
   // Use the on-board card socket labeled TF_CARD_SOCKET
